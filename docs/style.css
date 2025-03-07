@@ -1,0 +1,5 @@
+blockquote::before,
+blockquote::after {
+  font-family: "Georgia", serif; /* Use a decorative font */
+}
+

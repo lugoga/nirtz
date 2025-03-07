@@ -1,0 +1,44 @@
+{
+  "index.qmd": {
+    "index.html": "58590e52"
+  },
+  "intro.qmd": {
+    "intro.html": "b1f4e3bd"
+  },
+  "summary.qmd": {
+    "summary.html": "f7736570"
+  },
+  "references.qmd": {
+    "references.html": "6ee2176c"
+  },
+  "01_intro.qmd": {
+    "01_intro.html": "e8651fa8"
+  },
+  "02_trend.qmd": {
+    "02_trend.html": "f86bd0fb"
+  },
+  "03_energy.qmd": {
+    "03_energy.html": "8fb50f4a"
+  },
+  "04_ippu.qmd": {
+    "04_ippu.html": "ca7fcb65"
+  },
+  "05_afolu.qmd": {
+    "05_afolu.html": "d6780eb4"
+  },
+  "06_waste.qmd": {
+    "06_waste.html": "c809caf2"
+  },
+  "07_others.qmd": {
+    "07_others.html": "fbff7076"
+  },
+  "08_recac.qmd": {
+    "08_recac.html": "5320daf9"
+  },
+  "02_trendRev.qmd": {
+    "02_trendRev.html": "63c71c4a"
+  },
+  "02_trendRev2.qmd": {
+    "02_trendRev2.html": "275993a1"
+  }
+}

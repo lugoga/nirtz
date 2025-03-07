@@ -1,0 +1,1063 @@
+# Trends in GHG emissions and removals {#sec-trends}
+
+
+
+
+```{r}
+require(tidyverse)
+require(sf)
+require(patchwork)
+require(plotly)
+require(magrittr)
+require(gt)
+require(ggalluvial)
+```
+
+
+## Overview {#sec-overview}
+
+Tanzania's greenhouse gas (GHG) emissions profile presents a critical overview of its contributions to global climate change. As of the latest assessments, Tanzania is classified as a low emitter on the global stage, with its emissions accounting for a small fraction of the total GHG emissions worldwide. This positioning is largely due to its development status and reliance on subsistence agriculture, which is a predominant activity in the region. The country’s emissions are primarily derived from a few key sectors, including agriculture, forestry, and land use change, which contribute significantly to methane and carbon dioxide emissions. Agricultural practices, especially livestock farming and rice cultivation, are major sources of methane emissions. Deforestation and land degradation, driven by agricultural expansion and logging, also exacerbate carbon dioxide releases into the atmosphere.
+
+Despite these emissions, Tanzania has made notable strides in enhancing its renewable energy portfolio, focusing on sustainable practices to mitigate future emissions. The government actively promotes initiatives aimed at improving forest management, adopting cleaner agricultural technologies, and increasing the share of renewable energy sources such as hydropower, solar, and wind energy in its energy mix. Analyzing emissions by sector and gas helps identify the largest sources of emissions, prioritize mitigation actions, and track progress over time. This chapter presents the annual trends in greenhouse gas (GHG) emissions and removals in Tanzania by sector and gas from 1990 to 2021. It examines key sectors like agriculture, energy, industry, and transport, along with major GHGs such as carbon dioxide (CO~2~), methane (CH~4~), hydroflorcarbons (HFCs), and nitrous oxides (N~2~O). The chapter further explores and discusses the drivers of emission changes and highlights government and organizational efforts to address these challenges. The goal is to provide insights into Tanzania’s GHG emissions and their environmental and societal impacts.
+
+## Global Warming Potential {#sec-gwp}
+
+To obtain CO~2~ equivalent emissions, each greenhouse gas is multiplied by its **Global Warming Potential (GWP-100)**, which represents its warming effect relative to CO~2~ over a 100-year period (@tbl-gwp). Carbon dioxide (CO~2~) has a GWP of **1**, serving as the baseline. Methane (CH~4~) has a GWP of **28**, meaning it is **28 times more effective** at trapping heat than CO~2~. Nitrous oxide (N~2~O) has GWP of **273**, indicating its substantial contribution to climate change despite its lower concentration in the atmosphere. Hydrofluorocarbons (HFCs), a group of synthetic gases, have a wide range of GWP values, from **12 to 14,800**, depending on the specific compound. 
+
+```{r}
+#| label: tbl-gwp
+#| tbl-cap: Global warming potential (GWP) of greenhouse gases
+#| 
+# Create a data frame for GWP-100 values
+tibble::tibble(
+  Gas = c("CO2", "CH4", "N2O", "HFCs (Range)"),
+  GWP_100 = c(1, 28, 273, "12–14,800")
+) |> 
+  gt() |> 
+  fmt_chem(columns = Gas) |> 
+  cols_label(
+    Gas = "Greenhouse gas (GHG)",
+    GWP_100 = "Global warming potentia (GWP)"
+  )  |>
+  opt_align_table_header(align = "left")
+```
+
+
+
+```{r}
+## Data
+ghg = read_csv('../estimates/processed/ghg_master.csv')
+
+# ghg |> distinct(ghg)
+
+ghg = ghg |> 
+  mutate(co2equ = case_when(
+    ghg == "co2" ~ data * 1,
+    ghg == "ch4" ~ data * 28,
+    ghg == "n2o" ~ data * 273,
+    ghg == "hfc" ~ data * 12
+    ), 
+    .after = data) 
+    
+ ghg_sector = ghg |> 
+    filter(category %in% c('3 - Agriculture, Forestry, and Other Land Use', '2 - Industrial Processes and Product Use', '4 - Waste')) |> 
+    bind_rows(
+        ghg |> 
+            filter(sector == "ENERGY") |> 
+            mutate(
+                data = if_else(data < .01, 0, data),
+                data = na_if(x = data, y = 0)
+            ) |> 
+            drop_na()
+    )
+
+
+emissions = ghg |> 
+  filter(data > 0) |> 
+  mutate(
+    data = if_else(data < .01, 0, data),
+    data = na_if(x = data, y = 0)
+    )
+
+```
+
+
+```{r}
+  emission_rev = ghg |> 
+    filter(category %in% c('3 - Agriculture, Forestry, and Other Land Use', '2 - Industrial Processes and Product Use', '4 - Waste')) |> 
+    bind_rows(
+        emissions |>  filter(sector == "ENERGY")
+    ) |> 
+  filter(data > 0) |> 
+  mutate(
+    data = if_else(data < .01, 0, data),
+    data = na_if(x = data, y = 0)
+    )
+
+  emission_rev_total = emission_rev |> 
+  group_by(years, sector) |> 
+  summarise(data = sum(co2equ, na.rm = TRUE)) |> 
+  ungroup()   
+  
+```
+
+
+
+##	Total GHG Emissions and Removal {#sec-total}
+
+Tanzania’s total greenhouse gas emissions in 2021 were equivalent to 475,598 GgCO~2~eq including the Land Use, Land Use Change and Forestry (LULUCF) Sector. The total greenhouse gas emissions have increased by 186 percent since 2000 (@tbl-total-emRem). Likewiae, the estimated CO~2~equ removal for 2021 were  324,022 GgCO~2~eq most from LULUCF, which represent about 54% increase compared to 210,536 GgCO~2~eq in 2000 (@tbl-total-emRem). 
+
+```{r}
+#| label: tbl-total-emRem
+#| tbl-cap: Total emissions of CO~2~equivalent for 2000 and 2021 and the percentage change
+
+
+ghg_sector |> 
+    mutate( co2equ = abs(co2equ)) |> 
+    filter(years %in% c(2000,2021)) |> 
+    group_by(years, state) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    pivot_wider(names_from = years, values_from = total) |> 
+    janitor::clean_names() |> 
+    mutate(
+        pchange = (x2021-x2000)/x2000*100,
+        x2000 = scales::comma(x2000,big.mark = ","),
+        x2021 = scales::comma(x2021,big.mark = ",")
+        ) |> 
+        gt() |> 
+        cols_label(
+        state = "GHG",
+        x2000 = "2000",
+        x2021 = "2021",
+        pchange = "% change"
+        ) |> 
+        fmt_number(columns =  pchange, decimals = 0)|>
+  tab_style(
+    style = cell_text(weight = "bold", align = "center"),
+    locations = cells_column_labels()
+  ) %>%
+  tab_options(
+    table.font.size = "medium",
+    heading.align = "center"
+  ) |> 
+    tab_spanner(label = "CO2 equivalnet (Gg)", columns = c(x2000,x2021)) 
+
+
+```
+
+
+While in 2021 the removed CO~2~ equivalent of 324,022 (@tbl-total-emRem) came from AFOLU (@tbl-piedo), the emitted CO~2~ equivalent of 475,598 (@tbl-total-emRem) is shared among key sectors (@tbl-piedo) with IPPU emission contributes about 64 percent, followed with AFOLu that contributes 34.77 percent (@fig-piedo2). The removed CO~2~ equivalent was from AFOLU (@fig-piedo2)
+
+
+```{r}
+#| label: tbl-piedo
+#| tbl-cap: The total estimated CO~2~ equivalent emissions and and removal by sector in 2021
+
+ghg_sector |> 
+    mutate( co2equ = abs(co2equ)) |> 
+    filter(years %in% c(2021)) |> 
+    group_by(sector, state) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    pivot_wider(names_from = state, values_from = total) |> 
+    janitor::clean_names() |> 
+    mutate(
+        emissions = scales::comma(emissions,big.mark = ","),
+         removals = scales::comma( removals,big.mark = ",")
+        ) |> 
+    ungroup() |> 
+    gt() |> 
+    cols_label(sector = "Sector", emissions = "Emissions", removals = "Removals") |> 
+    tab_spanner(columns = 2:3, label = "CO2 equivalnet (Gg)") |> 
+    fmt_missing(columns = everything(), missing_text = "-")
+
+```
+
+
+```{r}
+#| label: fig-piedo2
+#| fig-cap: The nested pie and dnout with pie for removal or emission and donut for sector
+#| fig-width: 8
+#| fig-height: 5
+
+ghg_sector |> 
+    mutate( co2equ = abs(co2equ)) |> 
+    filter(years %in% c(2021)) |> 
+    group_by(sector, state)  |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup()|> 
+    webr::PieDonut(aes(pie = state, donut = sector, count = total),r0 = .4, r1=.9)
+```
+
+
+
+## Total CO~2~ Removal and Emission Trends
+
+Tanzania's GHG emissions have increased steadily between 1990 and 2021 (@fig-total-emission-sectors)over, driven by population growth, agricultural expansion, and energy demand. The total CO~2~ equivalent emissions was estimated at approximately 13,166 Gg annually over 32 years (@fig-total-emission-sectors). This value represents the combined impact of carbon dioxide (CO~2~), methane (CH~4~), and nitrous oxide (N~2~O) emissions, adjusted for their Global Warming Potential (GWP). 
+
+```{r}
+coeq_total = ghg_sector |> 
+    # mutate( co2equ = abs(co2equ)) |>    
+    group_by(years, state) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() 
+
+```
+
+```{r}
+#| label: fig-total-emission-sectors
+#| fig-cap: Total CO~2~ equivalent emission for all sectors combined from 1990 to 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+lab_df =  coeq_total |> 
+    filter(state %in% c('Emissions')) |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 380000,
+      lab_stats = "*Z statistic =  6.665*<br>*Rate = 13,166 Gg/year*<br>*p-value < 0.05*<br>*Sample=32*"
+    )
+    
+    
+coeq_total|> 
+    filter(state %in% c('Emissions')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 2006, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 2004, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2013, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(Total~CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+@fig-total-removal-afolu shows significant decreasing trend in total CO~2~ removals from AFOLU between 1996 and 2021. With an average removal of CO~2~ of 5,485 Gg per year suggests that AFOLU sector is playing an important role of removing CO~2~ from the atmophere. The removals prior to 1996 are omitted due to the lack of Land Use and Land Cover (LULC) data, which would lead to an underestimation of total removals. This omission arises because LULC data is crucial for accurately quantifying land-based carbon sequestration, including forest regrowth, afforestation, and soil carbon storage. 
+
+```{r}
+#| label: fig-total-removal-afolu
+#| fig-cap: Total CO~2~ removal from AFOLU from 1996 to 2021.
+#| fig-width: 8
+#| fig-height: 3
+
+
+lab_df =  coeq_total |> 
+    filter(years > 1995 & state %in% c('Removals')) |> 
+    pull(total) |> 
+    ts(start = c(1996,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 2005,  total = -300000,
+      lab_stats = "*Z statistic = -7.1415*<br>*Rate = 5,485 Gg/year*<br>*p-value < 0.05*<br>*Sample=26*"
+    )
+    
+  
+coeq_total|> 
+    filter(years > 1995 & state %in% c('Removals')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(
+        geom = "rect", xmin = 1989, xmax = 1996, ymin = -Inf, 
+        ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+    annotate(
+        geom = "rect", xmin = 1994, xmax = 2015, ymin = -Inf, 
+        ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(
+        geom = "rect", xmin = 2013, xmax = 2022, ymin = -Inf, 
+        ymax = Inf,fill = "cyan4", alpha = 0.2
+    )  +     
+    scale_y_continuous(
+        breaks = scales::pretty_breaks(n = 6),
+        labels = scales::label_number(big.mark = ','), 
+        name = expression(Total~CO[2]~(Gg))
+        )+
+    scale_x_continuous(breaks = seq(1990,2020,5)) +
+    theme_minimal(base_size = 11) +
+    theme(
+        axis.title.x = element_blank(), 
+        legend.position = 'none', 
+        panel.grid.minor = element_blank()
+        ) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+
+
+
+## Total CO~2~ Emission Trends by Sectors
+
+
+
+
+```{r}
+coeq_total_sector = ghg_sector |> 
+    filter(state %in% c('Emissions')) |> 
+    group_by(years, sector) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() 
+
+```
+
+CO~2~-equivalent emissions from the **waste sector** have increased significantly from 1990 to 2021 (@fig-total-emission-waste), with an average rate of **20.7 Gg per year**. This upward trend is statistically significant (**z = 8.03, p < 0.001**), confirming that the increase is not due to random variation. The 95% confidence interval (**15.3 to 27.6 Gg per year**) suggests a consistent growth rate, likely driven by increased waste generation and decomposition-related emissions.
+
+
+```{r}
+#| label: fig-total-emission-waste
+#| fig-cap: Total CO~2~ equivalent emission from **WASTE** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+lab_df =  coeq_total_sector |> 
+    filter(sector %in% c('WASTE')) |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 600,
+      lab_stats = "*Z statistic =  8.027*<br>*Rate = 20.704 Gg/year*<br>*p-value < 0.05*<br>*Sample=32*"
+    )
+    
+    
+coeq_total_sector |> 
+    filter(sector %in% c('WASTE')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 2006, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 2004, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2013, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(Total~CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+@fig-total-emission-energy show that there is a strong and statistically significant upward trend in the emission of CO~21~-equivalent emissions from the energy sector. The Sen's slope indicates that CO~21~-equivalent emissions increase by rate of 163.13 Gg per year, which is significant. 
+
+
+```{r}
+#| label: fig-total-emission-energy
+#| fig-cap: Total CO~2~ equivalent emission from **ENERGY** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+lab_df =  coeq_total_sector |> 
+    filter(sector %in% c('ENERGY')) |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 3000,
+      lab_stats = "*Z statistic =  5.65*<br>*Rate = 163.13 Gg/year*<br>*p-value < 0.05*<br>*Sample size = 32*"
+    )
+    
+    
+coeq_total_sector |> 
+    filter(sector %in% c('ENERGY')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 2005, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 2003, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2013, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(Total~CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+
+@fig-total-emission-AFOLU shows that emissions in the AFOLU sector are increasing each year. On average, AFOLU emit CO~2~ equivalent of around 3,117 Gg per year. 
+
+```{r}
+#| label: fig-total-emission-AFOLU
+#| fig-cap: Total CO~2~ equivalent emission from **AFOLU** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+lab_df =  coeq_total_sector |> 
+    filter(sector %in% c('AFOLU')) |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 140000,
+      lab_stats = "*Z statistic =  7.8001*<br>*Rate = 3117 Gg/year*<br>*p-value < 0.05*<br>*Sample size = 32*"
+    )
+    
+    
+coeq_total_sector |> 
+    filter(sector %in% c('AFOLU')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 2001, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 1999, xmax = 2011, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2009, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(Total~CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+CO~2~ equivalent Emissions in the IPPU sector have been rising steadily over time (@fig-total-emission-IPPU). On average, IPPU emit about 10,039 Gg per year of CO~2~ equivalent into the atmosphre. The increasing trend  of CO~2~ equivalent is highly significant (@fig-total-emission-IPPU)
+
+
+```{r}
+#| label: fig-total-emission-IPPU
+#| fig-cap: Total CO~2~ equivalent emission from **IPPU** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+lab_df =  coeq_total_sector |> 
+    filter(sector %in% c('IPPU')) |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 240000,
+      lab_stats = "*Z statistic =  6.0163*<br>*Rate = 10,039 Gg/year*<br>*p-value < 0.05*<br>*Sample size = 32*"
+    )
+    
+    
+coeq_total_sector |> 
+    filter(sector %in% c('IPPU')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 1996, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 1994, xmax = 2014, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2012, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(Total~CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+Over the 32-year period from 1990 to 2021, emissions of CO~2~ equivalent have shown consistent and significant increases across four major sectors -- AFOLU (Agriculture, Forestry, and Other Land Use), IPPU (Industrial Processes and Product Use), WASTE, and ENERGY.  Across all sectors, the increases in emissions are statistically significant, indicating that these trends are not due to random fluctuations but rather reflect real, sustained changes. In the AFOLU sector, emissions increased at an average rate of 3117.26 Gg/year (@fig-total-emission-all). This continueal rising of CO~2~ equivalent from AFOLU reflects the increasing impact of agricultural practices, land use changes, and forestry on greenhouse gas emissions, which is crucial given the sector's role in global carbon cycles. 
+
+Similarly, the IPPU sector experienced a positive trend of CO~2~ emission with an average of 10039.19 Gg per year, representing a substantial contribution of GHG to the atmosphre linked to industrial processes and product use over time. This trend highlights the growing emissions associated with industrial activities, manufacturing processes, and the use of certain products, including those involving chemicals and materials. Meanwhile, the ENERGY sector saw a more moderate increase of 163.13 units per year on average. While this rate is smaller compared to the others, the trend still points to an ongoing rise in emissions, primarily driven by the combustion of fossil fuels for energy production. 
+
+
+
+
+```{r}
+#| label: fig-total-emission-all
+#| fig-cap: Total CO~2~ equivalent emission by sectors between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+coeq_total_sector |>    
+    ggplot(aes(x = years, y = total, fill = sector, color = sector)) +
+    # geom_area(alpha = 1)+
+     geom_line(linewidth = .8) + 
+    gghighlight::gghighlight(max(total) > 0)+
+    ggsci::scale_fill_bmj() +
+     ggsci::scale_color_bmj() +
+    annotate(geom = "rect", xmin = 1989, xmax = 1996, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 1994, xmax = 2006, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2004, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +  
+    scale_y_continuous(
+        limits = c(0,5.2e5), expand = c(0, NA),
+        breaks = scales::pretty_breaks(n = 5),
+        trans = scales::modulus_trans(p = .2),
+        labels = scales::label_number(big.mark = ','), 
+        name = expression(Total~CO[2]~equivalnent~(Gg))
+        )+
+    scale_x_continuous(breaks = seq(1990,2020,5)) +
+    theme_minimal(base_size = 11) +
+    theme(
+        axis.title.x = element_blank(), 
+        legend.position = 'none', 
+        panel.grid.minor = element_blank()
+        )
+
+#  coeq_total_sector |> arrange(sector, years) |> flextable::flextable()
+```
+
+
+## Total CO~2~ Emission Trends by Gas
+
+```{r}
+
+lulcf_ondoleo = agriculture_forestry_land_use <- c(
+  "3 - Agriculture, Forestry, and Other Land Use",  "3.A - Livestock",
+  "3.A.1 - Enteric Fermentation",  "3.A.1.a - Cattle",
+  "3.A.2 - Manure Management  (1)",  "3.A.2.a - Cattle",
+  "3.B - Land",  "3.B.1 - Forest land",  "3.B.1.b - Land Converted to Forest land",  "3.B.2 - Cropland",  "3.B.2.b - Land Converted to Cropland",  "3.B.3 - Grassland",  "3.B.3.b - Land Converted to Grassland",  "3.B.4 - Wetlands",  "3.B.4.a - Wetlands Remaining Wetlands",  "3.B.4.b - Land Converted to Wetlands",  "3.B.5 - Settlements",  "3.B.5.b - Land Converted to Settlements",  "3.B.6 - Other Land",  "3.B.6.b - Land Converted to Other land",  "3.C - Aggregate sources and non-CO2 emissions sources on land (2)",  "3.C.1 - Burning",  "3.D - Other",
+  "4 - Waste", '4.A - Solid Waste Disposal' 
+
+  )
+
+```
+
+```{r}
+ghg_sub_sectors = ghg |> 
+    filter(!category %in% c('3 - Agriculture, Forestry, and Other Land Use', '2 - Industrial Processes and Product Use', '4 - Waste')) |> 
+    bind_rows(
+        ghg |> 
+            filter(sector == "ENERGY") |> 
+            mutate(
+                data = if_else(data <= 0, 0, data),
+                data = na_if(x = data, y = 0)
+            ) |> 
+            drop_na()
+    ) |> 
+    mutate(ghg = str_to_upper(ghg)) 
+
+```
+
+
+@tbl-ghg-ghg provides a detailed breakdown of greenhouse gas (GHG) emissions and removals across various sectors. In 2021, the estimated CO~2~ equivalent of Methane (CH~4~) emissions were around 157,628 Gg, primarily attributed to the Agriculture, Forestry, and Other Land Use (AFOLU) sector, with a minor contribution of 1,092 Gg from the Waste sector (@fig-ghg-ghg). The estimated CO~2~ equivalent of Nitrous oxide (N~2~O) emissions are significantly low with 7,729 Gg in 2021, attributed from the AFOLU sector alone.  
+
+```{r}
+#| label: tbl-ghg-ghg
+#| tbl-cap: Total emission and Removal of GHGs by sector in 2021
+
+ghg_sector |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+    filter(years == 2021) |> 
+    group_by(state, sector, ghg) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() |> 
+    pivot_wider(values_from = total, names_from = sector) |> 
+    gt(
+    # rowname_col = "state",
+    groupname_col = "state",
+    row_group_as_column = TRUE
+    ) |> 
+    fmt_chem(columns = ghg) |> 
+    fmt_number(columns = everything(), decimals = 1) |> 
+    fmt_missing(columns = everything(), missing_text = "-") |> 
+    tab_spanner(columns = 3:6, label = "CO2 equivalent (Gg)") |> 
+    cols_label(
+      ghg = "GHG"
+    ) |> 
+  cols_align(align = 'right', columns = 3:6) |>
+  opt_align_table_header(align = "center")
+
+
+```
+
+
+Carbon dioxide (CO~2~) emissions in 2021 were around 48,120 Gg from Energy sector and 113,082 Gg from the IPPU sector, with no emissions from AFOLU or Waste (@tbl-ghg-ghg). Conversely, CO~2~ removals are substantial that AFOLU alone removed around 324,022 Gg in 2021. Hydrofluorocarbons (HFCs), which are synthetic gases, emitted an estimated CO~2~ equivalent of 191,256 Gg from the IPPU sector. These finings highlights the varying contributions of different sectors to GHG emissions and underscores the importance of AFOLU in both emissions and removals (@fig-ghg-ghg).
+
+
+
+
+```{r}
+#| label: fig-ghg-ghg
+#| fig-cap: Share of emission and Removal of GHGs by sector in 2021
+
+
+ghg_sector |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+    filter(years == 2021) |> 
+    group_by(state, sector, ghg) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() |> 
+  ggplot(aes(axis1 = state, axis2 = sector, axis3 = ghg, y = total))+
+  geom_alluvium(aes(fill = ghg), curve_type = "sigmoid", alpha = .6, width = 1/4.5) +
+  geom_stratum(aes(fill = ghg), width = 1/4.5)+
+  geom_label(stat = "stratum", aes(label = after_stat(stratum)), size = 3, alpha = .7)+
+  scale_x_discrete(limits = c("Focus", "Year"), expand = c(0.1, 0.05)) +
+  # geom_flow() +
+  theme_void()+
+  theme(legend.position = "none")+
+  ggsci::scale_fill_nejm()
+```
+
+
+
+
+### METHANE (CH~4~)
+
+@tbl-ghg-ghg indicates that CH~4~ is contributed by AFOLU in large portion and small portion from WASTE. 
+
+```{r}
+#| label: fig-total-emission-gas-waste
+#| fig-cap: Trend of CO~2~ equivalent emission from **WASTE** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+ch4 = ghg_sector |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+    filter(ghg == "CH4") |> 
+    group_by(years) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() 
+
+
+
+lab_df =  ch4 |> 
+    # filter(sector %in% c('WASTE')) |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 140000,
+      lab_stats = "*Z statistic =  7.8001*<br>*Rate = 2,953 Gg/year*<br>*p-value < 0.05*<br>*Sample size = 32*"
+    )
+    
+    
+ch4 |> 
+    # filter(sector %in% c('IPPU')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 1996, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 1994, xmax = 2014, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2012, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+
+
+```{r}
+#| label: tbl-ch4-emission
+#| tbl-cap: CO~2~2 equivalent of Methance (CH~4~) emissions by Key categories in WASTE sector, detailing annual rate of emissions, Percentage Contribution, and Cumulative Share. A shades of red gradient indicate contribution levels, with dark red representing highe emissions and lighter shades denoting lower contributions.
+
+  ghg |> 
+    filter(ghg == "ch4") |> 
+    # distinct(category) |> pull()
+    filter(!category %in% lulcf_ondoleo) |> 
+  group_by(category) |> 
+  summarise(total = sum(co2equ , na.rm = TRUE)) |> 
+  mutate(pct = total/sum(total)*100)  |> 
+  arrange(desc(pct)) |> 
+  mutate(pctcum = cumsum(pct)) |> 
+  mutate(across(is.numeric, round, 2)) |> 
+  filter(pctcum <=99.99)|> 
+  separate(category, into = c("code", 'category'), sep = "-") |> 
+    gt() |> 
+    cols_label(
+        code = "Code",
+        category = "Key category",
+        total = "Total CH{4} (Gg)",
+        pct = "Percentage",
+        pctcum = "Cumulative"
+    ) |>     
+  tab_options(
+    table.font.size = "medium",
+    heading.align = "center"
+  ) |> 
+  gt::data_color(
+    columns = pct, 
+    palette = hcl.colors(n = 20, palette = "reds", rev = TRUE), 
+    domain = c(0,100)) |> 
+  gt::data_color(
+    columns = pctcum, 
+    palette = hcl.colors(n = 20, palette = "blues", rev = T), 
+    domain = c(70,95.1))
+
+```
+
+
+
+
+
+
+### Hydrochlorocarbons (HFCs)
+
+@tbl-ghg-ghg indicates that HFC~4~ is mainly emitted with IPPU 
+
+```{r}
+#| label: fig-hfc-emission-gas-ippu
+#| fig-cap: Trend of CO~2~ equivalent emission from **IPPU** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+hfc = ghg_sector |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+    filter(ghg == "HFC") |> 
+    group_by(years) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() 
+
+
+
+lab_df =  hfc |> 
+    # filter(sector %in% c('WASTE')) |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 140000,
+      lab_stats = "*Z statistic =  5.8217*<br>*Rate = 6460.79 Gg/year*<br>*p-value < 0.05*<br>*Sample size = 32*"
+    )
+    
+    
+hfc |> 
+    # filter(sector %in% c('IPPU')) |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 1996, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 1994, xmax = 2014, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2012, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+
+
+```{r}
+#| label: tbl-hfc-emission
+#| tbl-cap: CO~2~2 equivalent of HFCs emissions by Key categories in IPPU sector, detailing annual rate of emissions, Percentage Contribution, and Cumulative Share. A shades of red gradient indicate contribution levels, with dark red representing highe emissions and lighter shades denoting lower contributions.
+
+  ghg |> 
+    filter(ghg == "hfc") |> 
+    # distinct(category) |> pull()
+    filter(!category %in% "IPPU") |> 
+  group_by(category) |> 
+  summarise(total = sum(co2equ , na.rm = TRUE)) |> 
+  mutate(pct = total/sum(total)*100)  |> 
+  arrange(desc(pct)) |> 
+  mutate(pctcum = cumsum(pct)) |> 
+  mutate(across(is.numeric, round, 2)) |> 
+  filter(pctcum <=99.9954877)|> 
+  separate(category, into = c("code", 'category'), sep = "-") |> 
+    gt() |> 
+    cols_label(
+        code = "Code",
+        category = "Key category",
+        total = "Total CH{4} (Gg)",
+        pct = "Percentage",
+        pctcum = "Cumulative"
+    ) |>     
+  tab_options(
+    table.font.size = "medium",
+    heading.align = "center"
+  ) |> 
+  gt::data_color(
+    columns = pct, 
+    palette = hcl.colors(n = 20, palette = "reds", rev = TRUE), 
+    domain = c(0,100)) |> 
+  gt::data_color(
+    columns = pctcum, 
+    palette = hcl.colors(n = 20, palette = "blues", rev = T), 
+    domain = c(30,95.5))
+
+```
+
+
+
+
+### Carbondioxide Emission (CO~2~)
+
+@tbl-ghg-ghg indicates that CO~2~ is mainly emitted with IPPU 
+
+```{r}
+#| label: fig-co2-emission-gas-luluucf
+#| fig-cap: Trend of CO~2~ emission from **IPPU** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+co2 = ghg_sector |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+    filter(ghg == "CO2") |> 
+    group_by(years, state) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() 
+
+
+
+lab_df =  co2 |> 
+    filter(state == "Emissions") |> 
+    pull(total) |> 
+    ts(start = c(1990,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 1997,  total = 140000,
+      lab_stats = "*Z statistic =  4.9136*<br>*Rate =  3492.95 Gg/year*<br>*p-value < 0.05*<br>*Sample size = 32*"
+    )
+    
+    
+co2 |> 
+    filter(state == "Emissions")  |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 1996, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 1994, xmax = 2014, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2012, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+
+
+```{r}
+#| label: tbl-co2-emission
+#| tbl-cap: CO~2~2 by Key categories in IPPU  sector, detailing annual rate of emissions, Percentage Contribution, and Cumulative Share. A shades of red gradient indicate contribution levels, with dark red representing highe emissions and lighter shades denoting lower contributions.
+
+  ghg |> 
+    filter(ghg == "co2" ) |> 
+    # distinct(category) |> pull()
+    filter(co2equ >= 0 & !category %in% lulcf_ondoleo) |> 
+  group_by(category) |> 
+  summarise(total = sum(co2equ , na.rm = TRUE)) |> 
+  mutate(pct = total/sum(total)*100)  |> 
+  arrange(desc(pct)) |> 
+  mutate(pctcum = cumsum(pct)) |> 
+  mutate(across(is.numeric, round, 2)) |> 
+  filter(pctcum <=99.5)|> 
+  separate(category, into = c("code", 'category'), sep = "-") |> 
+    gt() |> 
+    cols_label(
+        code = "Code",
+        category = "Key category",
+        total = "Total CH{4} (Gg)",
+        pct = "Percentage",
+        pctcum = "Cumulative"
+    ) |>     
+  tab_options(
+    table.font.size = "medium",
+    heading.align = "center"
+  ) |> 
+  gt::data_color(
+    columns = pct, 
+    palette = hcl.colors(n = 20, palette = "reds", rev = TRUE), 
+    domain = c(0,40)) |> 
+  gt::data_color(
+    columns = pctcum, 
+    palette = hcl.colors(n = 20, palette = "blues", rev = T), 
+    domain = c(30,95.5))
+
+```
+
+
+
+
+### Carbondioxide Removals (CO~2~)
+
+@tbl-ghg-ghg indicates that CO~2~ is mainly emitted with IPPU 
+
+```{r}
+#| label: fig-trend-removal-co2
+#| fig-cap: Trend of CO~2~ emission from **IPPU** between 1990 and 2021
+#| fig-width: 8
+#| fig-height: 3
+
+
+co2 = ghg_sector |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+    filter(ghg == "CO2") |> 
+    group_by(years, state) |> 
+    summarise(total = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() 
+
+
+
+lab_df =  co2 |> 
+    filter(!state == "Emissions") |> 
+    pull(total) |> 
+    ts(start = c(1996,1), frequency = 1) |> 
+    trend::sens.slope() |> 
+    broom::tidy() |> 
+    mutate(
+      years = 2015,  total = -140000,
+      lab_stats = "*Z statistic =  7.2964*<br>*Rate =  -5,486.1 Gg/year*<br>*p-value < 0.05*<br>*Sample size = 32*"
+    )
+    
+    
+co2 |> 
+    filter(!state == "Emissions")  |> 
+    ggplot(aes(x = years, y = total)) +
+    geom_line(color = "darkgreen", linewidth = .8) + 
+    annotate(geom = "rect", xmin = 1989, xmax = 1996, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) + 
+    annotate(geom = "rect", xmin = 1994, xmax = 2014, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+    annotate(geom = "rect", xmin = 2012, xmax = 2022, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    )  +     
+        scale_y_continuous(breaks = scales::pretty_breaks(n = 5),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equivalnent~(Gg)))+
+        scale_x_continuous(breaks = seq(1990,2020,5)) +
+        theme_minimal(base_size = 11) +
+        theme(axis.title.x = element_blank(), legend.position = 'none', panel.grid.minor = element_blank()) +
+    ggtext::geom_richtext(
+      data = lab_df, aes(x = years, y = total, label = lab_stats),
+      family = "Roboto Condensed",
+      size = 3, lineheight = 1.2,
+      fill = "#ffffffab", 
+      show.legend = FALSE
+    )
+
+```
+
+
+
+
+```{r}
+#| label: tbl-co2-removal-factors
+#| tbl-cap: CO~2~ removal by Key categories in AFOLU  sector, detailing annual rate of emissions, Percentage Contribution, and Cumulative Share. A shades of red gradient indicate contribution levels, with dark red representing highe emissions and lighter shades denoting lower contributions.
+
+  ghg |> 
+    filter(ghg == "co2" ) |> 
+    # distinct(category) |> pull()
+    filter(co2equ < 0 & !category %in% lulcf_ondoleo) |> 
+  group_by(category) |> 
+  summarise(total = sum(co2equ , na.rm = TRUE)) |> 
+  mutate(pct = total/sum(total)*100)  |> 
+  arrange(desc(pct)) |> 
+  mutate(pctcum = cumsum(pct)) |> 
+  mutate(across(is.numeric, round, 2)) |> 
+  # filter(pctcum <=99.5)|> 
+  separate(category, into = c("code", 'category'), sep = "-") |> 
+    gt() |> 
+    cols_label(
+        code = "Code",
+        category = "Key category",
+        total = "Total CH{4} (Gg)",
+        pct = "Percentage",
+        pctcum = "Cumulative"
+    ) |>     
+  tab_options(
+    table.font.size = "medium",
+    heading.align = "center"
+  ) |> 
+  gt::data_color(
+    columns = pct, 
+    palette = hcl.colors(n = 20, palette = "reds", rev = TRUE), 
+    domain = c(0,60)) |> 
+  gt::data_color(
+    columns = pctcum, 
+    palette = hcl.colors(n = 20, palette = "blues", rev = T), 
+    domain = c(30,95.5))
+
+```
+
+
+
+
+##	Precursors
+
+
+

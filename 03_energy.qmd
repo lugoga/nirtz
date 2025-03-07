@@ -1,0 +1,109 @@
+# ENERGY
+
+
+```{r}
+require(tidyverse)
+require(sf)
+require(patchwork)
+require(plotly)
+require(magrittr)
+require(gt)
+require(ggalluvial)
+```
+
+
+```{r}
+## Data
+ghg = read_csv('../estimates/processed/ghg_master.csv')
+
+# ghg |> distinct(ghg)
+
+ghg = ghg |> 
+  mutate(co2equ = case_when(
+    ghg == "co2" ~ data * 1,
+    ghg == "ch4" ~ data * 28,
+    ghg == "n2o" ~ data * 273,
+    ghg == "hfc" ~ data * 12
+    ), 
+    .after = data) 
+
+```
+
+
+
+```{r}
+energy = ghg |> 
+  filter(sector == "ENERGY" ) |> 
+   mutate(
+  data = if_else(data < .01, 0, data),
+    data = na_if(x = data, y = 0)
+  ) |> 
+      drop_na()
+
+
+energy |> 
+    filter(years %in% c(2010,2021)) |> 
+    group_by(years, category) |> 
+    summarise(n = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() |> 
+    mutate(years = as.factor(years)) |> 
+    plotme::count_to_sunburst()
+
+```
+
+
+##	Sector overview
+
+The @ipcc2006  categorize the Energy Sector for greenhouse gas (GHG) reporting into three distinct subsectors -- Fuel Combustion Activities (1.A); Fugitive Emissions from Fuels (1.B), and  Carbon Dioxide Transport and Storage (1.C).  In Tanzania’s GHG inventory, emissions have been estimated exclusively for the Fuel Combustion Activities (1.A) subsector. This includes emissions generated from Energy Industries, Manufacturing Industries and Construction, Transport, and Other Sectors, as detailed in @tbl-cat. Fugitive Emissions from Fuels (1.B) and Carbon Dioxide Transport and Storage (1.C) have not been included in the current inventory. This focus on fuel combustion activities reflects the primary sources of energy-related emissions in Tanzania, while highlighting areas for potential expansion in future reporting efforts.
+
+```{r}
+#| label: tbl-cat
+#| tbl-cap: Fuel combustion activities data and the time period
+energy |> 
+    filter(co2equ >= 0 ) |> 
+    distinct(category) |> 
+    mutate(ghg = "CO2", period = "1990-2021") |> 
+    gt() |> 
+    fmt_chem(columns = ghg) |> 
+    cols_label(
+        category = "Sub-category",
+        period = "Inventory period",
+        ghg = "GHG"
+    )
+```
+
+
+```{r}
+energy |> 
+    filter(co2equ >= 0 & !category == "Natural Gas Liquids") |>   
+    group_by(category) |> 
+    summarise(total = sum(co2equ , na.rm = TRUE)) |> 
+    mutate(pct = total/sum(total)*100)  |> 
+    arrange(desc(pct)) |> 
+    mutate(pctcum = cumsum(pct)) |> 
+    mutate(across(is.numeric, round, 2)) |> 
+    # filter(pctcum <=99.5)|> 
+    separate(category, into = c("code", 'category'), sep = "-")
+```
+
+##	Methods, data sources and assumptions
+###	Coal
+###	Petroleum Products
+###	Biomass
+###	Electricity
+###	Category 1A1 – Energy Industries
+###	Category 1A2 – Manufacturing and Construction Industries
+###	Category 1A3a – Aviation
+###	Category 1A3b – Road Transport
+###	Category 1A3c – Railways
+###	Category 1A4 – Other Sectors
+###	Category 1B1 – Fugitive Emissions from Solid Fuels
+###	Category 1B2 – Fugitive Emissions from Oil and Natural Gas
+##	Quality assurance and quality control
+##	Description of uncertainties
+##	Time series consistency issues
+##	Recalculations
+##	Improvements
+
+
+

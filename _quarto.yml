@@ -1,0 +1,49 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  cover-image: cover.png
+  title: "National Inventory Report"
+  subtitle: "Greenhouse Gases Emission in Tanzania"
+  author: "The United Republic of Tanzania"
+  date: "2025-02-26"
+  search: true
+  repo-url: https://github.com/lugoa/nir25/
+  repo-actions: [edit]
+  downloads: [pdf, epub]
+  sharing: [twitter, facebook]
+  # sidebar:
+  #   style: docked
+  #   background: light
+
+
+  chapters:
+    - index.qmd
+    - 01_intro.qmd
+    # - 02_trend.qmd
+    # - 02_trendRev.qmd
+    - 02_trendRev2.qmd
+    - 03_energy.qmd
+    - 04_ippu.qmd
+    - 05_afolu.qmd
+    - 06_waste.qmd
+    - 07_others.qmd
+    - 08_recac.qmd
+    - references.qmd
+
+bibliography: references.bib
+# csl: my.csl
+
+format:
+  html:
+    theme: cosmo
+    css: style.css
+  pdf:
+    documentclass: scrreprt
+
+execute: 
+  echo: false
+  warning: false
+  comment: false
+

@@ -1,0 +1,1407 @@
+# AFOLU
+
+
+```{r}
+require(tidyverse)
+require(sf)
+require(patchwork)
+require(plotly)
+require(magrittr)
+require(gt)
+require(ggalluvial)
+```
+
+
+```{r}
+## Data
+ghg = read_csv('../estimates/processed/ghg_master.csv')
+
+# ghg |> distinct(ghg)
+
+ghg = ghg |> 
+  mutate(
+    co2equ = case_when(
+        ghg == "co2" ~ data * 1,
+        ghg == "ch4" ~ data * 28,
+        ghg == "n2o" ~ data * 273,
+        ghg == "hfc" ~ data * 12
+    ), 
+    .after = data) 
+
+```
+
+
+
+
+## Sector Overview
+###	AFOLU sector description
+###	Overview of methodology and completeness for the AFOLU Sector
+##	Emissions and removals from Livestock category (3A)
+###	Enteric Fermentation (3A1)
+
+```{r}
+enteric_fermentation_kikatio <- c(
+  "3.A.1.a.i - Dairy Cows",  "3.A.1.a.ii - Other Cattle",  "3.A.1.b - Buffalo",  "3.A.1.c - Sheep",  "3.A.1.d - Goats",  "3.A.1.e - Camels",  "3.A.1.f - Horses",  "3.A.1.g - Mules and Asses",  "3.A.1.h - Swine",  "3.A.1.i - Poultry")
+```
+
+Methane (CH~4~) is a key greenhouse gas produced as a result of digestion in ruminant animals like cattle, as well as in some non-ruminants, such as pigs and camels. Ruminants account for the majority of CH~4~ emissions due to their capacity to decompose fibrous feed via anaerobic fermentation [@scoones2023livestock]. The amount of CH~4~ emitted is affected by various factors including species, age, weight, feed quality and amount, as well as the energy expenditure of the animal [@moumen2016effects]. 
+
+
+```{r}
+#| label: tbl-livestock-cat
+#| tbl-cap: Methane emission from enteric fermentation by livestock for 2000 and 2021
+
+
+
+  ent_all = ghg |> 
+    filter(category %in% enteric_fermentation_kikatio & co2equ > 0) |> 
+    filter(years %in% c(2000, 2021)) |>  
+    group_by(years) |> 
+    summarise(total = sum(co2equ)) |> 
+    pivot_wider(values_from = total, names_from = years) |> 
+    janitor::clean_names() |> 
+    mutate(category = "TOTAL", pchange = (x2021 - x2000) / x2000 * 100)
+
+
+ghg |> 
+    filter(category %in% enteric_fermentation_kikatio & co2equ > 0) |> 
+    filter(years %in% c(2000, 2021)) |> 
+    select(years, category, co2equ) |> 
+    pivot_wider(values_from = co2equ, names_from = years) |> 
+    janitor::clean_names() |> 
+    mutate(pchange = (x2021 - x2000) / x2000 * 100) |> 
+    arrange(desc(x2021)) |> 
+    bind_rows(ent_all) |> 
+    gt() |> 
+    fmt_number(columns = everything(), decimals = 1) |> 
+    tab_spanner(columns = 2:3, label = "CO2eq (Gg)") |>     
+    tab_options(
+        table.width = px(700),  # Set overall table width
+        column_labels.font.weight = "bold"
+    ) |> 
+  cols_width(
+    category ~ px(200),  # Set width for the first column
+    x2000 ~ px(70),     # Set width for the second column
+    x2021 ~ px(70),     # Set width for the third column
+    pchange ~ px(70)  # Set width for the fourth column
+  )  |> 
+    cols_label(
+        category = "Livestock",
+        x2000 = '2000',
+        x2021 = '2021',
+        pchange = 'Change (%)'
+    ) |>     
+  tab_style(
+    style = cell_text(weight = "bold"),  # Apply bold style
+    locations = cells_body(rows = 7)     # Target the 6th row
+  ) |> 
+  tab_options(
+    data_row.padding = px(5)  # Adjust row padding for better readability
+  )
+
+```
+
+In 2021, methane emissions (represented as CO~2~eq) from enteric fermentation was **150,786.3** CO~2~eq (Gg) an increase of about **85.2%** compared to **81,406.66** CO~2~eq (Gg) in 2000 (@tbl-livestock-cat) with other cattle contributing 85.9 percent () of the **150,786.3** CO~2~eq (Gg) in 2021 (@fig-share-livestock).
+
+
+```{r}
+#| label: fig-share-livestock
+#| fig-cap: Percentage share of CH~4~ emissions from  Enteric Fermentation by livestock for 2021
+#| 
+ghg |> 
+    filter(category %in% enteric_fermentation_kikatio & co2equ > 0) |> 
+    filter(years %in% c(2021)) |> 
+    separate(category, into = c('code', "category"), sep = "-") |> 
+    mutate(category = str_squish(category)) |> 
+    plot_ly(
+       labels = ~category, values = ~co2equ, type = "pie",
+       hole = 0.6, # Creates the donut hole (0.5 = 50% hole)
+       textinfo = "label+percent", # Show label and percentage
+       hoverinfo = "label+value+percent" # Show label, value, and percentage on hover
+    #    marker = list(colors = c("#2794e1", "#3694a0", "#ea0e0e", "#a96813"))
+            ) |>
+    layout(
+        # title = "Total GHG Emissions by Sector",
+        showlegend = FALSE, 
+        legend = list(orientation = "h", x = 0.5, y = -0.1)
+        ) 
+
+```
+
+
+###	Manure Management (3A2)
+
+```{r}
+manure_kikatio <- c(
+  "3.A.2.a - Cattle",  "3.A.2.a.i - Dairy cows",  "3.A.2.a.ii - Other cattle",  "3.A.2.b - Buffalo",  "3.A.2.c - Sheep",  "3.A.2.d - Goats",  "3.A.2.e - Camels",  "3.A.2.f - Horses",
+  "3.A.2.g - Mules and Asses",  "3.A.2.h - Swine",  "3.A.2.i - Poultry",  "3.A.2.j - Other (please specify)"
+  )
+```
+
+Livestock manure is primarily composed of organic matter. Under anaerobic conditions (i.e., in the absence of oxygen), the decomposition of manure by methanogenic bacteria results in the production of methane (CH~4~) (@fig-share-manure-gases). Such conditions are prevalent in intensive livestock management systems, such as dairy farms, beef feedlots, and swine and poultry operations, where manure is often stored in large piles or disposed of in lagoons. Manure management also contribute to nitrous oxide (N~2`O) emissions (@fig-share-manure-gases) during the handling and storage phases prior to soil application. Direct N~2~O emissions arise from the nitrification and denitrification processes of ammoniacal nitrogen present in the waste. 
+
+
+```{r}
+#| label: fig-share-manure-gases
+#| fig-cap: Percentage share of N~2~ and CH~4~ emission from manure managment by livestock for 2021
+#| 
+ghg |> 
+    filter(category %in% manure_kikatio & co2equ > 0) |> 
+    filter(years %in% c(2021)) |> 
+    separate(category, into = c('code', "category"), sep = "-") |> 
+    mutate(category = str_squish(category), ghg = str_to_upper(ghg)) |> 
+    group_by(ghg, category) |> 
+    summarise(n = sum(co2equ, na.rm = TRUE)) |> 
+    plotme::count_to_sunburst()
+```
+
+
+```{r}
+#| label: tbl-manure-cat
+#| tbl-cap: CO~2~eq emission from manure managment by livestock for 2000 and 2021
+
+
+
+  ent_all = ghg |> 
+    filter(category %in% manure_kikatio & co2equ > 0) |> 
+    filter(years %in% c(2000, 2021)) |>  
+    group_by(years) |> 
+    summarise(total = sum(co2equ)) |> 
+    pivot_wider(values_from = total, names_from = years) |> 
+    janitor::clean_names() |> 
+    mutate(category = "TOTAL", pchange = (x2021 - x2000) / x2000 * 100)
+
+
+ghg |> 
+    filter(category %in% manure_kikatio & co2equ > 0) |> 
+    filter(years %in% c(2000, 2021)) |> 
+    group_by(years, category) |> 
+    summarise(co2equ = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() |> 
+    pivot_wider(values_from = co2equ, names_from = years) |> 
+    janitor::clean_names() |> 
+    mutate(pchange = (x2021 - x2000) / x2000 * 100) |> 
+    arrange(desc(x2021)) |> 
+    bind_rows(ent_all) |> 
+    gt() |> 
+    fmt_number(columns = everything(), decimals = 1) |> 
+    tab_spanner(columns = 2:3, label = "CO2eq (Gg)") |>     
+    tab_options(
+        table.width = px(700),  # Set overall table width
+        column_labels.font.weight = "bold"
+    ) |> 
+  cols_width(
+    category ~ px(200),  # Set width for the first column
+    x2000 ~ px(70),     # Set width for the second column
+    x2021 ~ px(70),     # Set width for the third column
+    pchange ~ px(70)  # Set width for the fourth column
+  )  |> 
+    cols_label(
+        category = "Livestock",
+        x2000 = '2000',
+        x2021 = '2021',
+        pchange = 'Change (%)'
+    ) |>     
+  tab_style(
+    style = cell_text(weight = "bold"),  # Apply bold style
+    locations = cells_body(rows = 8)     # Target the 6th row
+  ) |> 
+  tab_options(
+    data_row.padding = px(5)  # Adjust row padding for better readability
+  )
+
+```
+
+In 2021, CO~2~eq emission from manure management was **11,577.3** CO~2~eq (Gg) an increase of about **83.9%** compared to **6,296.7** CO~2~eq (Gg) in 2000 (@tbl-manure-cat) with cattle contributing **85.1** percent () of the **11,577.3** CO~2~eq (Gg) in 2021 (@fig-share-manure).
+
+
+```{r}
+#| label: fig-share-manure
+#| fig-cap: Percentage share of CO~2~eq emission from manure managment by livestock for 2021
+#| 
+ghg |> 
+    filter(category %in% manure_kikatio & co2equ > 0) |> 
+    filter(years %in% c(2021)) |> 
+    separate(category, into = c('code', "category"), sep = "-") |> 
+    mutate(category = str_squish(category)) |> 
+    plot_ly(
+       labels = ~category, values = ~co2equ, type = "pie",
+       hole = 0.6, # Creates the donut hole (0.5 = 50% hole)
+       textinfo = "label+percent", # Show label and percentage
+       hoverinfo = "label+value+percent"# Show label, value, and percentage on hover
+            ) |>
+    layout(
+        # title = "Total GHG Emissions by Sector",
+        showlegend = FALSE, 
+        legend = list(orientation = "h", x = 0.5, y = -0.6)
+        ) 
+
+```
+
+
+##	Emissions and removals from Land category (3B)
+
+This section presents anthropogenic emissions and removals of CO~2 ~from the loss and gain of carbon (C), associated with land use and with land-use and land-cover change. Emissions and removals of CO~2~ from Harvested Wood Products (HWP), i.e., products that are manufactured/processed after the harvesting of wood from planted forests, such as paper, sawnwood and wood panels, are also taken into account.
+
+###	Category overview
+
+The Land category encompasses emissions and removals of greenhouse gases from land use and land-use change. This category is crucial for understanding the impact of land management practices on the carbon cycle and overall GHG emissions. Summary information on method and emission factor selection is provided in Table xx, with key categories identified.
+
+```{r}
+#| label: tbl-lulc-categories
+#| tbl-cap: Summary of methodologies and emission factors – land category
+
+land_categories <- data.frame(
+  Category = c(
+    "A. Forest Land", "A. Forest Land",
+    "B. Cropland", "B. Cropland", "B. Cropland", "B. Cropland",
+    "C. Grassland", "C. Grassland", "C. Grassland", "C. Grassland",
+    "D. Wetlands", "D. Wetlands",
+    "E. Settlements", "E. Settlements", "E. Settlements",
+    "F. Other Lands"
+  ),
+  Subcategory = c(
+    "1. Forest land remaining Forest land", "2. Land converted to Forest land",
+    "1. Cropland remaining Cropland", "2. Land converted to Cropland", 
+    "Forest converted to cropland", "Wetlands converted to cropland",
+    "1. Grassland remaining Grassland", "2. Land converted to Grassland", 
+    "Forest converted to grassland", "Wetlands converted to grassland",
+    "1. Wetlands remaining Wetlands", "2. Land converted to Wetlands",
+    "1. Settlements remaining Settlements", "2. Land converted to Settlements", 
+    "Forest converted to settlements",
+    "Other Lands"
+  ),
+  Description = c(
+    "Forest land that remains forest land over time.",
+    "Land converted from other categories to forest land.",
+    "Cropland that remains cropland over time.",
+    "Land converted from other categories to cropland.",
+    "Forest land converted to cropland.",
+    "Wetlands converted to cropland.",
+    "Grassland that remains grassland over time.",
+    "Land converted from other categories to grassland.",
+    "Forest land converted to grassland.",
+    "Wetlands converted to grassland.",
+    "Wetlands that remain wetlands over time.",
+    "Land converted from other categories to wetlands.",
+    "Settlements that remain settlements over time.",
+    "Land converted from other categories to settlements.",
+    "Forest land converted to settlements.",
+    "Land that does not fall into the other categories."
+  )
+)
+
+land_categories |> 
+    gt()|> 
+    tab_spanner(columns = 1:2, label = "Land use and land cover") |>     
+    tab_options(
+        table.width = px(700),  # Set overall table width
+        column_labels.font.weight = "bold",
+        data_row.padding = px(5)  # Adjust row padding for better readability
+    ) |> 
+  cols_width(
+    Category ~ px(100), 
+    Subcategory ~ px(270),     
+    Description ~ px(330)
+  )    |> 
+#   tab_row_group(
+#     label = "A. Forest Land",
+#     rows = Category == "A. Forest Land"
+#   ) %>%
+#   tab_row_group(
+#     label = "B. Cropland",
+#     rows = Category == "B. Cropland"
+#   ) %>%
+#   tab_row_group(
+#     label = "C. Grassland",
+#     rows = Category == "C. Grassland"
+#   ) %>%
+#   tab_row_group(
+#     label = "D. Wetlands",
+#     rows = Category == "D. Wetlands"
+#   ) %>%
+#   tab_row_group(
+#     label = "E. Settlements",
+#     rows = Category == "E. Settlements"
+#   ) %>%
+#   tab_row_group(
+#     label = "F. Other Lands",
+#     rows = Category == "F. Other Lands"
+#   ) %>%
+  cols_hide(columns = Subcategory) |> # Hide the Category column since it's now redundant
+   cols_merge(
+    columns = vars(Category),
+    pattern = "{1}"
+  )
+  
+
+
+
+```
+
+
+
+###	Information on approaches used for representing land areas and on land-use databases used for the inventory preparation
+
+This inventory employed Approach 2 for land-use identification, as outlined in @IPCC2006vol4. This approach facilitated the assessment of total land-use area extents and tracked transitions between land-use categories over time. Specifically, it enabled the quantification of conversions between different land-use types within the study period. The primary monitoring system used was remote sensing, which was instrumental in identifying forest land and detecting changes in forest cover. 
+
+To construct land-use transition matrices, data were sourced from national land use cover maps and the European Space Agency (ESA) Climate Change Initiative (CCI) Land Cover Maps for the years 1995, 2015, 2016, and 2021. A comparative classification analysis was conducted based on IPCC Guidelines [@ipcc2006] to ensure consistency between different data sources used for Activity Data. It is noteworthy that land-use classifications derived from ESA Land Cover Maps were reclassified to align with the national land-use mapping categories in accordance with the IPCC reporting framework.
+
+###	Land-use definitions and the classification systems used and their correspondence to the Land categories
+
+To ensure consistency across all land-based estimates, standardized working definitions for land categories were developed and adopted during the preparation of the estimates. These land-use categories align with the guidelines outlined in IPCC [@IPCC2006vol4]. The following definitions are used for the different land-use categories, consistent with national land-use classifications:
+
+1. **Forest Land** -- is defined in accordance with the domestic definition as land that (i) is under forestry land-use and (ii) covers an area of at least 0.5 hectares, with a minimum tree crown cover of 10% or the potential to achieve such cover through natural or planted tree species. Additionally, the trees must have the potential to reach or have already attained a minimum height of 3 meters at maturity in situ. This category includes forest plantations and mangroves.
+
+
+1. **Cropland** -- refers to areas actively cultivated for the production of harvested crops. This includes tilled land, recently harvested fields, fallow land within crop rotation systems, and areas prepared for planting. In Tanzania, cropland encompasses both annual cropland, used for food crops such as maize, rice, cassava, sorghum, and beans, and perennial cropland, used for crops like coffee, cashew, tea, and sisal. Cultivation practices vary depending on regional climate and soil conditions.
+
+1. **Grassland** -- is defined as land where the vegetation is predominantly composed of grasses, with minimal tree cover. These areas are often characterized by open plains and serve as habitats for grazing animals. Grassland includes areas with tree cover below the thresholds specified for forest land (which may also be used for grazing) and set-aside grasslands (i.e., unmanaged grasslands not utilized for agricultural purposes).
+
+1. **Wetland** -- are areas of land that are saturated with water, either naturally or artificially. They can be temporary or permanent and include marshes, swamps, and peatlands. In Tanzania, wetlands are categorized into three main types:
+
+    1. *Coastal wetlands* -- formed by tidal influence and wave action, these include mudflats, mangroves, estuaries, and deltas;
+    1. *Rift system wetlands* --found in rift depressions, these include salt lakes, swamps, and playas; and
+    1. *Highland drainage basin wetlands* -- formed by rivers originating in the highlands, these include lakes, swamps, and floodplains.
+
+1. **Settlements** -- refer to areas of human habitation, such as villages, towns, and cities, governed by the National Human Settlements Development Policy. This category encompasses all structured communities where people reside, categorized by population density and type of activity (urban, rural, or pastoral). Settlements are further classified based on population size, with "villages" having smaller populations compared to "minor towns" and "urban settlements."
+
+1. **Other Land** --  includes areas not covered by the above classifications, such as bare land, rock outcrops, coastal bare lands, and ice caps or snow-covered areas. Essentially, it encompasses all land that does not fall into the defined categories of forest land, cropland, grassland, wetland, or settlements.
+
+###	Information on land areas for biomass burning
+
+Information on biomass burning in Tanzania was specifically considered for the following categories: Burning in Forest Land, Burning in Cropland, and Burning in Grassland. For these categories, emissions of methane (CH~4`) and nitrous oxide (N~2~O) were estimated. However, emissions of carbon monoxide (CO) and nitrogen oxides (NO~x~) were not estimated due to limited data availability. Additionally, burning of woody biomass in Wetlands, Settlements, and Other Land does not occur, and thus these categories were excluded from the analysis.
+
+Given the limited availability of in-country data for all categories, biomass burning data were sourced from the Global Wildfire Information System (GWIS), accessible at https://gwis.jrc.ec.europa.eu/apps/gwis.statistics/. This dataset is a satellite-based burning information covering the period from 2002 to 2023. 
+
+###	Data and data sources for Land emission factors
+
+The assessment explored multiple datasets, including land use and land cover (LULC) maps generated for the years 1995, 2010, 2016, and 2021 (*see* @tbl-data). These datasets were selected based on their relevance and accuracy in representing changes in land cover and land use over time. To ensure consistency and compatibility across the different data sources, a forest types layer was integrated into the analysis. This layer provided additional detail on forest classifications, enabling a more comprehensive understanding of land-use dynamics.
+
+```{r}
+#| label: tbl-data
+#| tbl-cap: Datasets used for analysis of land use and land cover changes in Tanzania Mainland, from 1995 - 2021
+
+datasets <- data.frame(
+  Name = c(
+    "Basemaps",
+    "Forest Types map",
+    "Hunting Technical Services Ltd (HTSL)",
+    "NAFORMA LULC map",
+    "ESA LULC map 2016",
+    "ESA LULC map 2021"
+  ),
+  Type = c(
+    "Vector",
+    "Raster",
+    "Vector",
+    "Vector",
+    "Raster",
+    "Raster"
+  ),
+  Description = c(
+    "Provides essential geographic context including administrative boundaries, water bodies, and infrastructure.",
+    "Classifies diverse forest types across Tanzania with high spatial resolution.",
+    "Historical land cover classifications including freshwater, bushland, and woodlands.",
+    "Offers updated insights into forest and non-forest land cover in Tanzania.",
+    "Captures Tanzania’s land cover as of 2016, revealing shifts in land use.",
+    "Extends LULC observations to 2021, allowing analysis of recent trends."
+  ),
+  Year = c(
+    "-",
+    "2020",
+    "1995",
+    "2015",
+    "2016",
+    "2021"
+  ),
+  Source = c(
+    "Several",
+    "John, E.; Bunting, P.; Hardy, A.; Silayo, D.S.; Masunga, E. A Forest Monitoring System for Tanzania. Remote Sens. 2021, 13, 3081.",
+    "The HTSL map was produced at a scale of 1:250,000 (Hunting Technical Services Ltd 1997);",
+    "National Forest Resources Monitoring and Assessment (NAFORMA) 2015",
+    "European Space Agency (ESA) Copernicus Global Land Service (CGLS) Land Cover",
+    "European Space Agency (ESA) Copernicus Global Land Service (CGLS) Land Cover"
+  )
+)
+
+
+datasets |> 
+    gt() |> 
+    tab_options(data_row.padding = px(5))
+```
+
+### Map processing (generation of change maps)
+
+Land use categories were classified according to IPCC land use types as per section 5.3.3. To align the IPCC land use classes, reclassification was done for the 1995 map. This involved categorizing the land use types according to the standard classification used in IPCC guidelines, followed by joining the reclassified table to the shapefile. Reclassification can be represented as a mapping function shown in Equation XX:
+
+$$
+New class = f (Old class)
+$$
+
+
+ 	
+> Where $f$ is a function that maps the old land use classes to new classes according to the IPCC guidelines.
+
+The analysis focused on the epochs defined by the datasets. The Hunting layer data (Table xx) was used to establish the land use conditions between 1995 to 2010. This historical comparison enabled the calculation of the annual rate of change. The data from ESA 2021 were also used in this analysis, allowing for a detailed understanding of LULC transitions over time. The equation below was used to calculate changes of each land use and land cover between the two epochal years.
+
+$$
+\sigma = \frac{\omega - \alpha}{\Delta t}
+$$
+
+
+Where: $\omeaga$ - Land use and land cover area at the end of the period, $\alpha$  Land use and land cover area at the start of the period, and $\Delta t$ Number of years between the start and end periods.
+
+### Land use transition matrix
+#### Tanzania Mainland
+
+The land use matrix was developed to consistently quantify land use and land-use conversions, facilitating the identification of areas undergoing land-use transition for various initial and final land use combinations. A land-use change matrix for the period 1995 to 2021 has been developed, using national land use information for the categories of Forest Land, Cropland (subdivided into Annual Cropland and Perennial Cropland), Grassland, Wetlands, Settlements, and Other land (@fig-lulc-class-mainland). 
+
+![Land Use and Land Cover in Mainland Tanzania for 2021. The inset bar plot represents the area by class and inset treemap represents the percentage area cover by class. Source European Space Agency (ESA) 2021](plots/map_lulc_bongo_2021.jpg){#fig-lulc-class-mainland}
+
+The missing years for the land cover required interpolation or extrapolation to complete the series. The values for the land use transition matrix were initially formulated by the Expert Review Team during the in-country assessment of the GHG Inventory to establish a more comprehensive time series of area data for each reported land use change category, while also resolving issues related to inconsistencies in area measurements. Furthermore, this was executed to demonstrate the dependability and precision of the matrix, along with alterations in the aggregated 26-year areas.  The areas were used to formulate a two-phase computation for the yearly areas remaining in the same category and for the annual change. This was conducted to confirm that the conversions and total area remained stable across the whole period. The total loss and gain of each land use categories over the study period is presented @tbl-lulc-matrix-tz and the annual rate of change in @tbl-lulc-rate-tz.
+
+
+The land conversion from major categories to sub-categories of land use and land cover classes for mainland Tanzania is shown in @fig-lulc-transition. For instance, loss of annual crop over the inventory period is attributed by gain of forestland, grassland and settlement. The loss of forestland is contributed by gain in annual crops and grassland. The large gain of forest land, annual crop and grassland has reduced the size of forest plantations over the same period. It was also observed that the areas for settlement has shrunk in 2021 compared to 1995 due to gain in grassland, forestland and agriculture land for annual crop cultivation. However, it should be noted that the loss of settlement in the settlement category is small compared to the gain of forest in other land use classes such as annual crop, forest, forest plantation, and grassland, where settlement gains are significant high.   
+
+![Main category of Land Use and Land Cover conversion in Mainland Tanzania between 1995 and 2021](plots/mainland_land_conversion.jpg){#fig-lulc-transition}
+
+The alluvial plot in @fig-lulc-transition illustrates the transitions of land cover types across three distinct epochs: 1995-2010, 2010-2016, and 2016-2021. Each colored flow (or “stream”) represents a transition of land cover classes over time (@fig-lulc-transition). Widening flows of grassland and shrinking of wetland and annual crop from 2010 toward 2021 are evident (Figure 25), illustrating shifts due to agricultural expansion and settlement.
+ 
+
+```{r}
+#| label: tbl-lulc-matrix-tz
+#| tbl-cap: Annual rate of change matrix of land use and land cover classes between 1995 and 2021 in Tanzania Mainland 
+
+readxl::read_excel('data/epoches_mainland_lulc_changes_gross_rate_ha.xlsx', sheet = "Sheet1",  skip = 1, n_max = 9)  |> 
+  gt() |> 
+  # tab_spanner(columns = 2:3, label = "Crops") |> 
+  # tab_spanner(columns = 4:5, label = "Forest") |> 
+  tab_spanner(columns = 2:10, label = "Area (Ha)") |> 
+  tab_options(data_row.padding = px(5)) |> 
+  fmt_number(columns = everything(), decimals = 1) |> 
+  fmt_missing(columns = everything(), missing_text = "-")
+
+```
+
+	
+
+```{r}
+#| label: tbl-lulc-rate-tz
+#| tbl-cap: Annual rate of change matrix of land use and land cover classes between 1995 and 2021 in Tanzania Mainland 
+
+readxl::read_excel('data/epoches_mainland_lulc_changes_gross_rate_ha.xlsx', sheet = "Sheet1", skip = 16)  |> 
+  gt() |> 
+  # tab_spanner(columns = 2:3, label = "Crops") |> 
+  # tab_spanner(columns = 4:5, label = "Forest") |> 
+  tab_spanner(columns = 2:8, label = "Area (Ha)") |> 
+  tab_options(data_row.padding = px(5)) |> 
+  fmt_number(columns = everything(), decimals = 1) |> 
+  fmt_missing(columns = everything(), missing_text = "-")
+
+```
+
+
+
+
+
+ 
+#### Zanzibar
+
+Unlike the Tanzania mainland, the land use and land cover of Zanzibar is divided into five main categories including forestland, grassland, annual cropland, settlement, and others (@fig-lulc-zenji). The remaining classes including perennial crops, forest plantations, and wetland were missing because of the nature of the island. Based on the 2021 layers, forestland was the dominant land use category consisting of over 70 percent of the total area of Unguja and Pemba Island. Forestland was followed by grassland, which account for more than 19 percent of the total land area. Therefore, forestland and grassland combined account for more than 90% of the total area in Zanzibar, while the remaining class share only less than 9 percent. 
+ 
+![Land Use and Land Cover in Zanzibar for 2021. The inset bar plot represents the area by class and inset tree map represent the percentage area cover by class. Source European Space Agency (ESA) 2021](plots/map_lulc_zenji_2021.jpg){#fig-lulc-zenji}
+
+Despite lack of the same categories, it was found that the land use categories experienced significant changes over the inventory period contributed by socio-economic development and environmental factors. The rapid increase of human population the Zanzibar has demanded more areas for settlements and agriculture, leading to loss forest in the Pemba and Unguja Islands. Similar to @fig-lulc-zenji, the land conversion from major categories to sub-categories of land use and land cover classes for Zanzibar is shown in @fig-lulconver-zenji. It was found that the loss of annual crop over the inventory period was mainly contributed by gain of forestland, grassland and settlement. The loss of forestland is contributed by gain in annual crops and grassland. The large gain of forest land, annual crop and grassland has reduced the size of forest plantations over the same period. It was also observed that the areas for settlement have shrunk in 2021 compared to 1995 due to gain in grassland, forestland and agriculture land for annual crop cultivation. However, it should be noted that the loss of settlement in the settlement category is small compared to the gain of forest in other land use classes such as annual crop, forest, forest plantation, perennial crop, and grassland, where settlement gains are significant high.   
+ 
+![Main category of Land Use and Land Cover conversion in Zanzibar between 1995 and 2021.](plots/zenji_land_conversion.jpg){#fig-lulconver-zenji}
+ 
+
+
+```{r}
+#| label: tbl-lulc-matrix
+#| tbl-cap: Total area matrix of land use and land cover classes between 1995 and 2021 in Zanzibar
+
+readxl::read_excel('data/epoches_zanzibar_lulc_changes_gross_rate_ha.xlsx', sheet = "Area matrix and rate", skip = 1, n_max = 7)  |> 
+  slice(1:7) |> 
+  gt() |> 
+  # tab_spanner(columns = 2:3, label = "Crops") |> 
+  # tab_spanner(columns = 4:5, label = "Forest") |> 
+  tab_spanner(columns = 2:9, label = "Area (Ha)") |> 
+  tab_options(data_row.padding = px(5)) |> 
+  fmt_number(columns = everything(), decimals = 1) |> 
+  fmt_missing(columns = everything(), missing_text = "-")
+
+```
+
+	
+
+```{r}
+#| label: tbl-lulc-rate
+#| tbl-cap: Annual rate of change matrix of land use and land cover classes between 1995 and 2021 in Zanzibar
+
+readxl::read_excel('data/epoches_zanzibar_lulc_changes_gross_rate_ha.xlsx', sheet = "Area matrix and rate", skip = 15)  |> 
+  gt() |> 
+  # tab_spanner(columns = 2:3, label = "Crops") |> 
+  # tab_spanner(columns = 4:5, label = "Forest") |> 
+  tab_spanner(columns = 2:8, label = "Area (Ha)") |> 
+  tab_options(data_row.padding = px(5)) |> 
+  fmt_number(columns = everything(), decimals = 1) |> 
+  fmt_missing(columns = everything(), missing_text = "-")
+
+```
+
+
+
+###	Forest land (3B1)
+
+Tanzania's forests between 1995 and 2021, forestland remained a net carbon sink (@fig-forest), though have contributed to land-use conversions. On average, forestland remaining forestland (FL-FL) accounted for 2,986,583 ha of carbon sinks annually. Land converted to forestland also has played an important role, with cropland-to-forestland conversions contributing 122,195 ha and grassland-to-forestland conversions adding 202,173 ha annually. Conversions from settlements and other lands to forestland covered 7,996 ha and 59,046 ha, respectively. 
+
+ Over the 26-year period from (1996 to 2021), reforestation efforts significantly expanded forest cover: cropland-to-forestland increased by 2.59 million ha, and grassland-to-forest land grew by 2.42 million ha. These gains reflect the impacts of government policies such as the ban on raw timber exports, large-scale reforestation programs, and increased private sector participation. Moreover, the implementation of initiatives like the AFR100 (African Forest Landscape Restoration) has further boost efforts to restore degraded lands and increase carbon removals; these solidify Tanzania's forests as a critical carbon sink for climate change mitigation.
+
+```{r}
+#| label: fig-forest
+#| fig-cap: Trend of CO~2~ sink by sub-categories in the forest category
+#| fig-width: 8
+#| fig-height: 5
+
+
+forest_contrib = c('3.B.1.a - Forest land Remaining Forest land',   '3.B.1.b.i - Cropland converted to Forest Land' ,'3.B.1.b.ii - Grassland converted to Forest Land','3.B.1.b.iii - Wetlands converted to Forest Land','3.B.1.b.iv - Settlements converted to Forest Land' , '3.B.1.b.v - Other Land converted to Forest Land' 
+)
+
+colors <- c(
+  "Forest land Remaining Forest land" = "#228B22", 
+  "Cropland converted to Forest Land" = "#8B4513",  
+  "Grassland converted to Forest Land" = "#32CD32",  
+  "Wetlands converted to Forest Land" = "#20B2AA",  
+  "Settlements converted to Forest Land" = "#FF4500",  
+  "Other Land converted to Forest Land" = "#A9A9A9"  
+)
+
+# Calculate summary statistics
+summary_stats <- ghg |>
+  filter(category %in% forest_contrib & years > 1995) |>
+  separate(category, into = c("code", "category"), sep = "-") |>
+  drop_na() |>
+  group_by(category) |>
+  summarise(
+    # mean = mean(data, na.rm = TRUE),
+    median = median(data, na.rm = TRUE) ,
+    total = sum(data, na.rm = TRUE)
+  ) |>
+  ungroup()
+
+ghg |> 
+  filter(category %in% forest_contrib & years > 1995)  |> 
+  separate(category, into = c("code", "category"), sep = "-") |> 
+  mutate(category = str_squish(category)) |> 
+  drop_na() |> 
+  ggplot(aes(x = years, y = data, fill = category)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2013, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1)   +     
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6), limits = c(-2.5e5,0), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~removal~(Gg)))+
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  scale_fill_manual(values = colors) + 
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = 'top', legend.title = element_blank(), panel.grid.minor = element_blank()) +
+  guides(fill = guide_legend(nrow = 3)) +
+  annotate(
+    geom = "text", 
+    x = 1996.5, y = -.4e5, color = "ivory2",
+    label = paste0(
+      "Summary Statistics (CO~2~):\n",
+      paste(
+        summary_stats$category, 
+        # "Mean: ", round(summary_stats$mean, 1), 
+        " | Median: ", round(summary_stats$median, 1)|> scales::comma(big.mark = ","), 
+        " | Total: ", round(summary_stats$total, 1)|> scales::comma(big.mark = ","), 
+        collapse = "\n"
+      )
+    ),
+    hjust = 0, vjust = 1, size = 3.5, color = "black"
+  )
+
+
+```
+
+
+
+###	Cropland (3B2)
+
+Between 1995 and 2021, the trend of land conversion to cropland in the United Republic of Tanzania exhibits diverse contributions from various land types (Figure xx). In 1996, the conversion of forest land to agriculture accounted for 0.92%, grassland conversion for 0.04%, settlement conversion for 0.01%, and other land had a negative contribution of -0.03%. In 1997, forest land accounted for 1.93%, grassland for 0.34%, settlements for 0.02%, and other land for -0.07%. By 1998, forest land constituted 3.05%, grassland stayed at 0.54%, settlements at 0.03%, and other land decreased by 0.12%. 
+
+Over time, forest land remained the principal factor in farmland growth, achieving 287.75% by 2016 and 312.67% by 2021. Conversely, grassland conversion contributed markedly less, with 51.14% in 2016 and 55.56% in 2021. Settlements consistently represented a minor proportion, with values of 3.29% in 2016 and 3.57% in 2021. Other land also exhibited negative contributions, with a decline in farmland of -10.95% in 2016 and -11.88% in 2021.
+
+```{r}
+#| label: fig-cropland
+#| fig-cap: Trend of CO~2~ emission by sub-categories in the cropland category
+#| fig-width: 8
+#| fig-height: 5
+
+cropland_contrib <- c(
+  "3.B.2.a - Cropland Remaining Cropland",
+  "3.B.2.b.i - Forest Land converted to Cropland",
+  "3.B.2.b.ii - Grassland converted to Cropland",
+  "3.B.2.b.iii - Wetlands converted to Cropland",
+  "3.B.2.b.iv - Settlements converted to Cropland",
+  "3.B.2.b.v - Other Land converted to Cropland"
+)
+
+
+colors <- c(
+  "Forest land Remaining Forest land" = "#228B22", 
+  "Cropland converted to Forest Land" = "#8B4513",  
+  "Grassland converted to Forest Land" = "#32CD32",  
+  "Wetlands converted to Forest Land" = "#20B2AA",  
+  "Settlements converted to Forest Land" = "#FF4500",  
+  "Other Land converted to Forest Land" = "#A9A9A9"  
+)
+
+# Calculate summary statistics
+summary_stats <- ghg |>
+  filter(category %in% cropland_contrib & years > 1995) |>
+  separate(category, into = c("code", "category"), sep = "-") |>
+  drop_na() |>
+  group_by(category) |>
+  summarise(
+    # mean = mean(data, na.rm = TRUE),
+    median = median(data, na.rm = TRUE) ,
+    total = sum(data, na.rm = TRUE)
+  ) |>
+  ungroup()
+
+ghg |> 
+  filter(category %in% cropland_contrib & years > 1995)  |> 
+  separate(category, into = c("code", "category"), sep = "-") |> 
+  mutate(category = str_squish(category)) |> 
+  drop_na() |> 
+  ggplot(aes(x = years, y = data, fill = category)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2013, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1)   +     
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6), limits = c(-2.5e3,3e4), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~(Gg)))+
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  # scale_fill_manual(values = colors) + 
+  ggsci::scale_fill_lancet() +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = 'top', legend.title = element_blank(), panel.grid.minor = element_blank()) +
+  guides(fill = guide_legend(nrow = 3)) +
+  annotate(
+    geom = "text", 
+    x = 1996.5, y = 2e4, color = "ivory2",
+    label = paste0(
+      "Summary Statistics (CO~2~):\n",
+      paste(
+        summary_stats$category, 
+        # "Mean: ", round(summary_stats$mean, 1), 
+        " | Median: ", round(summary_stats$median, 1)|> scales::comma(big.mark = ","), 
+        " | Total: ", round(summary_stats$total, 1)|> scales::comma(big.mark = ","), 
+        collapse = "\n"
+      )
+    ),
+    hjust = 0, vjust = 1, size = 3.5, color = "black"
+  )
+
+
+```
+
+
+###	Grassland (3B3)
+
+From 1995 to 2021, Tanzania has experienced a significant trend of grassland being converted into other land uses (@fig-grassland). This transformation became noticeable starting in 1996, with a steady decline in the remaining grassland area as it was increasingly converted to various other land types. The conversion of forest land to grassland showed a consistent upward trend, starting at -1,529.88 hectares in 1996 and increasing to -39,834.98 hectares by 2021, indicating a gradual decline in forest cover in favor of grassland expansion. 
+
+Similarly, cropland converted to grassland followed an increasing pattern, beginning with -1,835.87 hectares in 1996 and reaching -47,732.68 hectares by 2021, this shows the growing conversion of agricultural land to grassland. The conversion of settlements to grassland also rose steadily, from -5.93 hectares in 1996 to -154.19 hectares in 2021, although this category contributed less to the overall conversion compared to forest and cropland. Additionally, other land uses were converted to grassland, increasing from -31.71 hectares in 1996 to -824.36 hectares in 2021.
+
+
+
+```{r}
+#| label: fig-grassland
+#| fig-cap: Trend of CO~2~ emission by sub-categories in the grassland category
+#| fig-width: 8
+#| fig-height: 5
+
+grassland_contrib <- c(
+  "3.B.3.a - Grassland Remaining Grassland",
+  "3.B.3.b - Land Converted to Grassland",
+  "3.B.3.b.i - Forest Land converted to Grassland",
+  "3.B.3.b.ii - Cropland converted to Grassland",
+  "3.B.3.b.iii - Wetlands converted to Grassland",
+  "3.B.3.b.iv - Settlements converted to Grassland",
+  "3.B.3.b.v - Other Land converted to Grassland"
+)
+
+
+colors <- c(
+  "Forest land Remaining Forest land" = "#228B22", 
+  "Cropland converted to Forest Land" = "#8B4513",  
+  "Grassland converted to Forest Land" = "#32CD32",  
+  "Wetlands converted to Forest Land" = "#20B2AA",  
+  "Settlements converted to Forest Land" = "#FF4500",  
+  "Other Land converted to Forest Land" = "#A9A9A9"  
+)
+
+# Calculate summary statistics
+summary_stats <- ghg |>
+  filter(category %in% grassland_contrib & years > 1995) |>
+  separate(category, into = c("code", "category"), sep = "-") |>
+  drop_na() |>
+  group_by(category) |>
+  summarise(
+    # mean = mean(data, na.rm = TRUE),
+    median = median(data, na.rm = TRUE) ,
+    total = sum(data, na.rm = TRUE)
+  ) |>
+  ungroup()
+
+ghg |> 
+  filter(category %in% grassland_contrib & years > 1995)  |> 
+  separate(category, into = c("code", "category"), sep = "-") |> 
+  mutate(category = str_squish(category)) |> 
+  drop_na() |> 
+  ggplot(aes(x = years, y = data, fill = category)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2013, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1)   +     
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6), limits = c(-2.1e5, 0), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~(Gg)))+
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  # scale_fill_manual(values = colors) + 
+  ggsci::scale_fill_lancet() +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = 'top', legend.title = element_blank(), panel.grid.minor = element_blank()) +
+  guides(fill = guide_legend(nrow = 3)) +
+  annotate(
+    geom = "label", 
+    x = 1991.5, y = -1.2e5, color = "black", alpha = .5, size = 2.6,
+    label = paste0(
+      "Summary Statistics (CO~2~):\n",
+      paste(
+        summary_stats$category, 
+        # "Mean: ", round(summary_stats$mean, 1), 
+        " | Median: ", round(summary_stats$median, 1)|> scales::comma(big.mark = ","), 
+        " | Total: ", round(summary_stats$total, 1)|> scales::comma(big.mark = ","), 
+        collapse = "\n"
+      )
+    ),
+    hjust = 0, vjust = 1, size = 3.5, color = "black"
+  )
+
+
+```
+
+
+###	Wetland (3B4)
+
+Tanzania does not report any emissions under wetland. Wetlands are highly variable ecosystems, with fluctuating water levels, seasonal changes, and diverse vegetation types. These factors contribute to significant spatial and temporal variability in greenhouse gas emissions, CO~2~ from conversion to wetlands by flooding, leading to methane (CH4) attributed by the complex interactions between hydrology, vegetation, and microbial processes. Moreover, human activities such as land use changes, drainage, and water management practices significantly affect wetland areas and their emissions.
+
+
+###	Settlements (3B5)
+
+Between 1995 and 2021, land-use changes from other land use to settlements in the United Republic of Tanzania has shown that conversions of forest land, cropland, and grassland into settlements has increased (@fig-settlement). Over the 25-year period, a total of 384.14 ha of forestland were converted to settlements, with an annual average conversion rate of 15.37 ha/year. Cropland experienced the highest level of conversion, contributing 897.89 ha to settlements at an average rate of 35.92 ha/year, making it the largest contributor to settlement expansion—approximately 2.34 times more than forestland. Grassland conversions were minimal, with only 4.70 ha converted in total, averaging 0.19 ha/year over the same period. Contrary, other land categories showed a total change of -16.59 ha, which may reflect adjustments in land classifications or methodological factors.
+
+
+
+```{r}
+#| label: fig-settlement
+#| fig-cap: Trend of CO~2~ emission by sub-categories in the settlement category in AFOLU sector
+#| fig-width: 8
+#| fig-height: 5
+
+settlement_contrib <- c(
+  "3.B.5.a - Settlements Remaining Settlements",
+  # "3.B.5.b - Land Converted to Settlements",
+  "3.B.5.b.i - Forest Land converted to Settlements",
+  "3.B.5.b.ii - Cropland converted to Settlements",
+  "3.B.5.b.iii - Grassland converted to Settlements",
+  "3.B.5.b.iv - Wetlands converted to Settlements",
+  "3.B.5.b.v - Other Land converted to Settlements"
+)
+
+
+colors <- c(
+  "Forest land Remaining Forest land" = "#228B22", 
+  "Cropland converted to Forest Land" = "#8B4513",  
+  "Grassland converted to Forest Land" = "#32CD32",  
+  "Wetlands converted to Forest Land" = "#20B2AA",  
+  "Settlements converted to Forest Land" = "#FF4500",  
+  "Other Land converted to Forest Land" = "#A9A9A9"  
+)
+
+# Calculate summary statistics
+summary_stats <- ghg |>
+  filter(category %in% settlement_contrib & years > 1995) |>
+  separate(category, into = c("code", "category"), sep = "-") |>
+  drop_na() |>
+  group_by(category) |>
+  summarise(
+    # mean = mean(data, na.rm = TRUE),
+    median = median(data, na.rm = TRUE) ,
+    total = sum(data, na.rm = TRUE)
+  ) |>
+  ungroup()
+
+ghg |> 
+  filter(category %in% settlement_contrib & years > 1995)  |> 
+  separate(category, into = c("code", "category"), sep = "-") |> 
+  mutate(category = str_squish(category)) |> 
+  drop_na() |> 
+  ggplot(aes(x = years, y = data, fill = category)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2013, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1)   +     
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6), limits = c(0, 1.5e3), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~(Gg)))+
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  # scale_fill_manual(values = colors) + 
+  ggsci::scale_fill_lancet() +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = 'top', legend.title = element_blank(), panel.grid.minor = element_blank()) +
+  guides(fill = guide_legend(nrow = 3)) +
+  annotate(
+    geom = "label", 
+    x = 1991.5, y = 1.3e3, color = "black", alpha = .5, size = 2.6,
+    label = paste0(
+      "Summary Statistics (CO~2~):\n",
+      paste(
+        summary_stats$category, 
+        # "Mean: ", round(summary_stats$mean, 1), 
+        " | Median: ", round(summary_stats$median, 1)|> scales::comma(big.mark = ","), 
+        " | Total: ", round(summary_stats$total, 1)|> scales::comma(big.mark = ","), 
+        collapse = "\n"
+      )
+    ),
+    hjust = 0, vjust = 1, size = 3.5, color = "black"
+  )
+
+
+```
+
+
+
+###	Other land (3B6)
+
+Other Land includes areas such as barren land; rock-outcrops, which have limited vegetation and organic matter, leading to relatively, lower emissions. Therefore, starting at 47.86 units in 1996 and steadily increasing to 393.58 units by 2021, indicating ongoing deforestation pressure. Cropland conversion follows a similar pattern but at a lower magnitude, rising from 50.59 units to 185.28 units (@fig-otherland). 
+
+Grassland conversion presents a unique pattern with initially high emissions of 431.10 units in 1996, stabilizing at 477.69 units from 2000 to 2015, before dropping sharply to 243.83 units in 2016 and gradually increasing to 301.89 units by 2021 (@fig-otherland). This suggests significant policy changes or land use modifications in 2016. Settlements conversion shows the lowest overall emissions, starting at 3.79 units in 1996, peaking at 19.05 units in 2001, maintaining stability at 15.88 units for several years, then decreasing to 7.05 units in 2016 before slight increases to 8.73 units by 2021 (@fig-otherland).
+
+
+
+
+```{r}
+#| label: fig-otherland
+#| fig-cap: Trend of CO~2~ emission by sub-categories in the other land category in AFOLU sector
+#| fig-width: 8
+#| fig-height: 5
+
+other_contrib <- c(
+  "3.B.6.a - Other land Remaining Other land",
+  # "3.B.6.b - Land Converted to Other land",
+  "3.B.6.b.i - Forest Land converted to Other Land",
+  "3.B.6.b.ii - Cropland converted to Other Land",
+  "3.B.6.b.iii - Grassland converted to Other Land",
+  "3.B.6.b.iv - Wetlands converted to Other Land",
+  "3.B.6.b.v - Settlements converted to Other Land"
+)
+
+
+colors <- c(
+  "Forest land Remaining Forest land" = "#228B22", 
+  "Cropland converted to Forest Land" = "#8B4513",  
+  "Grassland converted to Forest Land" = "#32CD32",  
+  "Wetlands converted to Forest Land" = "#20B2AA",  
+  "Settlements converted to Forest Land" = "#FF4500",  
+  "Other Land converted to Forest Land" = "#A9A9A9"  
+)
+
+# Calculate summary statistics
+summary_stats <- ghg |>
+  filter(category %in% other_contrib & years > 1995) |>
+  separate(category, into = c("code", "category"), sep = "-") |>
+  drop_na() |>
+  group_by(category) |>
+  summarise(
+    # mean = mean(data, na.rm = TRUE),
+    median = median(data, na.rm = TRUE) ,
+    total = sum(data, na.rm = TRUE)
+  ) |>
+  ungroup()
+
+ghg |> 
+  filter(category %in% other_contrib & years > 1995)  |> 
+  separate(category, into = c("code", "category"), sep = "-") |> 
+  mutate(category = str_squish(category)) |> 
+  drop_na() |> 
+  ggplot(aes(x = years, y = data, fill = category)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1)   +     
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6), limits = c(0, 1.15e3), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~(Gg)))+
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  # scale_fill_manual(values = colors) + 
+  ggsci::scale_fill_nejm() +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = 'top', legend.title = element_blank(), panel.grid.minor = element_blank()) +
+  guides(fill = guide_legend(nrow = 3)) +
+  annotate(
+    geom = "label", 
+    x = 1991.5, y = 1.1e3, color = "black", alpha = .5, size = 2.6,
+    label = paste0(
+      "Summary Statistics (CO~2~):\n",
+      paste(
+        summary_stats$category, 
+        # "Mean: ", round(summary_stats$mean, 1), 
+        " | Median: ", round(summary_stats$median, 1)|> scales::comma(big.mark = ","), 
+        " | Total: ", round(summary_stats$total, 1)|> scales::comma(big.mark = ","), 
+        collapse = "\n"
+      )
+    ),
+    hjust = 0, vjust = 1, size = 3.5, color = "black"
+  )
+
+
+```
+
+
+##	Emissions and removals from Aggregated and non-CO2 emissions on land (3C)
+
+```{r}
+burn_contrib <- c(
+  "3.C.1.a - Burning in Forest Land",
+  "3.C.1.b - Burning in Cropland",
+  "3.C.1.c - Burning in Grassland",
+  "3.C.1.d - Burning in all other land uses"
+)
+```
+
+
+###	Category overview
+
+The CO~2~ equ emission from Aggregated and non-CO2 emissions on land (3C) fall under three categories -- Burning in Forest Land, Burning in Cropland, and Burning in Grassland (@tbl-aggr). These categories emitted ammonia (CH~4~) and nitrogen dioxide (N~2~O). In 2021, the equivalent CO~2~ emitted from burning in forest land was 322.3 Gg which has increased by 6.2% compared to 303.5 in 2002. The equivalent CO~2~ emitted from burning in cropland was 1.7 Gg in 2021, which has declined by 70.8% compared to 5.8 Gg in 2002. Similarly, the equivalent CO~2~ emitted from burning of grassland decreased from 1,433.8 Gg in 2002 to 794.1 Gg in 2021, a decrease of about 44.6 percent (@tbl-aggr)
+
+
+```{r}
+#| label: tbl-aggr
+#| tbl-cap: Level assessment of CO~2~equ removal from from Aggregated and non-CO~2~ emissions on land
+
+ghg |> 
+  filter(category %in% burn_contrib & years %in% c(2002)) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  select(ghg,  years, category, co2equ)|> 
+  filter(co2equ > 0) |> 
+  pivot_wider(values_from = co2equ, names_from = ghg) |> 
+  select(-years) |> 
+  left_join(  
+      ghg |> 
+      filter(category %in% burn_contrib & years %in% c(2021)) |> 
+      mutate(ghg = str_to_upper(ghg)) |> 
+      select(ghg,  years, category, co2equ)|> 
+      filter(co2equ > 0) |> 
+      pivot_wider(values_from = co2equ, names_from = ghg) |> 
+      select(-years), 
+      by = 'category'
+  ) |> 
+  janitor::clean_names() |> 
+  mutate(total2000 = ch4_x + n2o_x, .after = n2o_x) |> 
+  mutate(total2021 = ch4_y + n2o_y, .after = n2o_y) |> 
+  mutate(pchangen2o = (total2021 - total2000) /total2000 * 100)  |> 
+  select(category, total2000, total2021, pchangen2o) |> 
+  gt() |> 
+  fmt_number(columns = 2:4, decimals = 2) |> 
+  tab_options(data_row.padding = px(5)) |> 
+  tab_spanner(columns = 2:3, label = "CO2eq (Gg)") |> 
+  cols_label(
+    category = 'Non-CO2 emissions category',
+    total2021 = '2021',
+    total2000 = '2002',
+    pchangen2o = "Change (%)"
+  ) |> 
+  cols_width(
+    category ~ px(400)
+  )
+
+
+# ghg |> 
+#   filter(category %in% burn_contrib & years %in% c(2002)) |> 
+#   mutate(ghg = str_to_upper(ghg)) |> 
+#   select(ghg,  years, category, co2equ)|> 
+#   filter(co2equ > 0) |> 
+#   pivot_wider(values_from = co2equ, names_from = ghg) |> 
+#   select(-years) |> 
+#   left_join(  
+#       ghg |> 
+#       filter(category %in% burn_contrib & years %in% c(2021)) |> 
+#       mutate(ghg = str_to_upper(ghg)) |> 
+#       select(ghg,  years, category, co2equ)|> 
+#       filter(co2equ > 0) |> 
+#       pivot_wider(values_from = co2equ, names_from = ghg) |> 
+#       select(-years), 
+#       by = 'category'
+#   ) |> 
+#   janitor::clean_names() |> 
+#   mutate(total2000 = ch4_x + n2o_x, .after = n2o_x) |> 
+#   mutate(total2021 = ch4_y + n2o_y, .after = n2o_y) |> 
+#   mutate(pchangen2o = (total2021 - total2000) /total2000 * 100)  |> 
+#   gt() |> 
+#   fmt_number(columns = 2:8, decimals = 1) |> 
+#   tab_options(data_row.padding = px(5)) |> 
+#   tab_spanner(columns = 2:4, label = "CO2eq in 2002") |> 
+#   tab_spanner(columns = 5:7, label = "CO2eq in 2021") |> 
+#   cols_label(
+#     category = 'Non-CO2 emissions category',
+#     ch4_x = 'CH4',
+#     ch4_y = 'CH4',
+#     n2o_x = 'N2O',
+#     n2o_y = 'N2O',
+#     total2021 = 'Total',
+#     total2000 = 'Total',
+#     pchangen2o = "Change (%)"
+#   ) |> 
+#   cols_width(
+#     category ~ px(300)
+#   )
+
+```
+
+
+ 
+###	Biomass burning (3C1)
+
+```{r}
+
+burn_data = ghg |> 
+  filter(category %in% burn_contrib) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  group_by(years, ghg, category) |> 
+  summarise(co2equ = sum(co2equ, na.rm = T)) |> 
+  ungroup() 
+```
+
+#### *Burning in Forest land*
+This category involves the combustion of trees and other vegetation in forest areas. It includes emissions from activities like deforestation, forest degradation, and wildfires. The primary gases released are CO2, CH4, and N2O (@fig-burning-forest). This category is significant because it often leads to large-scale carbon emissions due to the high biomass density in forests. 
+
+```{r}
+#| label: fig-burning-forest
+#| fig-cap: Trend of CO~2~equ emission from burning in forest land
+#| fig-width: 8
+#| fig-height: 4
+
+burn_data |> 
+  filter(category %in% "3.C.1.a - Burning in Forest Land" & !ghg == "CO2")   |> 
+  ggplot(aes(x = years, y = co2equ, fill = ghg)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 2002, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 2000, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1) +
+  scale_fill_manual(values = c('CH4' = 'maroon', 'N2O'='steelblue'))+
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6), limits = c(0, 0.7e3), expand = c(0, NA),, labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+
+#### *Burning in cropland *
+Burning in cropland refers to the combustion of agricultural residues left on fields after harvest. Farmers often burn crop residues to clear fields for the next planting season. This practice releases CO2, CH4, and N2O (@fig-burning-cropland). While emissions from this category are typically lower than those from forest burning, they still contribute to the overall GHG inventory. 
+
+```{r}
+#| label: fig-burning-cropland
+#| fig-cap: Trend of CO~2~equ emission from burning in cropland
+#| fig-width: 8
+#| fig-height: 4
+
+burn_data |> 
+  filter(category %in% "3.C.1.b - Burning in Cropland" & !ghg == "CO2")   |> 
+  ggplot(aes(x = years, y = co2equ, fill = ghg)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 2002, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 2000, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1) +
+  scale_fill_manual(values = c('CH4' = 'maroon', 'N2O'='steelblue'))+
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6), limits = c(0, 7e0), expand = c(0, NA),, labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+#### *Burning in Grassland *
+This category includes the burning of grasses and shrubs in grassland areas, which is common in savanna regions. It is often used as a land management practice to promote new growth or reduce the risk of uncontrolled wildfires. Emissions from grassland burning primarily include CO2, CH4, and N2O (@fig-burning-grassland). This category can exhibit significant fluctuations in emissions depending on land management practices and climatic conditions.
+
+
+```{r}
+#| label: fig-burning-grassland
+#| fig-cap: Trend of CO~2~equ emission from burning in grassland
+#| fig-width: 8
+#| fig-height: 4
+
+burn_data |> 
+  filter(category %in% "3.C.1.c - Burning in Grassland" & !ghg == "CO2")   |> 
+  ggplot(aes(x = years, y = co2equ, fill = ghg)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 2002, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 2000, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1) +
+  scale_fill_manual(values = c('CH4' = 'maroon', 'N2O'='steelblue3'))+
+  scale_y_continuous( breaks = scales::pretty_breaks(n = 6), limits = c(0, 1.8e3), expand = c(0, NA),, labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+
+
+###	Lime application (3C2)
+
+
+```{r}
+#| label: fig-lime
+#| fig-cap: Trend of CO~2~equ emission from lime
+#| fig-width: 8
+#| fig-height: 4
+#| 
+ghg |> 
+  filter(category %in% c('3.C.2 - Liming') & data > 0) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  ggplot(aes(x = years, y = co2equ)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1, fill = "maroon") +
+  # scale_fill_manual(values = c('CH4' = 'cyan4', 'CO2'='red', 'N2O'='steelblue'))+
+  scale_y_continuous(trans = scales::modulus_trans(p = .6), breaks = scales::pretty_breaks(n = 6), limits = c(0, 5e0), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+
+###	Urea application (3C3)
+
+
+
+```{r}
+#| label: fig-urea
+#| fig-cap: Trend of CO~2~equ emission from application of urea
+#| fig-width: 8
+#| fig-height: 4
+
+
+ghg |> 
+  filter(category %in% c('3.C.3 - Urea application') & data > 0) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  ggplot(aes(x = years, y = co2equ)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1, fill = "#066565") +
+  # scale_fill_manual(values = c('CH4' = 'cyan4', 'CO2'='red', 'N2O'='steelblue'))+
+  scale_y_continuous( breaks = scales::pretty_breaks(n = 6), limits = c(0, 1.6e2), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+###	Direct N2O emissions from managed soils (3C4)
+
+
+
+```{r}
+#| label: fig-soil
+#| fig-cap: Trend of CO~2~equ emission from managed soils
+#| fig-width: 8
+#| fig-height: 4
+
+
+ghg |> 
+  filter(category %in% c('3.C.4 - Direct N2O Emissions from managed soils  (3)') & data > 0) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  ggplot(aes(x = years, y = co2equ)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1, fill = "#1F77B4") +
+  # scale_fill_manual(values = c('CH4' = 'cyan4', 'CO2'='red', 'N2O'='steelblue'))+
+  scale_y_continuous( breaks = scales::pretty_breaks(n = 6), limits = c(0, 6.1e3), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+
+###	Indirect N2O from manure management (3C6)
+
+```{r}
+#| label: fig-manureM
+#| fig-cap: Trend of CO~2~equ emission from manure management
+#| fig-width: 8
+#| fig-height: 4
+
+
+ghg |> 
+  filter(category %in% c('3.C.6 - Indirect N2O Emissions from manure management') & data > 0) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  ggplot(aes(x = years, y = co2equ)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1, fill = "#1F77B4") +
+  # scale_fill_manual(values = c('CH4' = 'cyan4', 'CO2'='red', 'N2O'='steelblue'))+
+  scale_y_continuous( breaks = scales::pretty_breaks(n = 6), limits = c(0, 1e2), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+
+
+###	Rice Production (3C7)
+
+```{r}
+#| label: fig-rice
+#| fig-cap: Trend of CO~2~equ emission from rice production
+#| fig-width: 8
+#| fig-height: 4
+
+
+ghg |> 
+  filter(category %in% c("3.C.7 - Rice cultivation" )) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  ggplot(aes(x = years, y = co2equ)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1, fill = "#1F77B4") +
+  # scale_fill_manual(values = c('CH4' = 'cyan4', 'CO2'='red', 'N2O'='steelblue'))+
+  scale_y_continuous( breaks = scales::pretty_breaks(n = 6), limits = c(0, 1.1e3), expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+##	Emissions and removals from Harvested wood products (3D1)
+###	Category Description
+
+
+```{r}
+#| label: tbl-hwp
+#| tbl-cap: Level assessment of CO~2~equ removal from Harvested wood products for 2000 and 2021
+#| 
+ghg |> 
+  filter(category %in% c("3.D.1 - Harvested Wood Products" ) & years %in% c(2000,2021)) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  drop_na() |> 
+  select(category, years, co2equ) |> 
+  pivot_wider(values_from = co2equ, names_from = years) |> 
+  janitor::clean_names() |> 
+  mutate(pchange = (x2021 - x2000) /x2000 * 100) |> 
+  gt() |> 
+  tab_options(data_row.padding = px(5)) |> 
+  tab_spanner(columns = 2:3, label = "CO2equ (Gg)") |> 
+  cols_label(
+    category = 'HWP category',
+    x2000 = '2000',
+    x2021 = '2021',
+    pchange = "Change (%)"
+  )
+```
+
+###	Emissions and removals from HWP
+
+
+
+```{r}
+#| label: fig-hwp
+#| fig-cap: Trend of CO~2~equ removal from Harvested wood products
+#| fig-width: 8
+#| fig-height: 4
+
+ghg |> 
+  filter(category %in% c("3.D.1 - Harvested Wood Products" )) |> 
+  mutate(ghg = str_to_upper(ghg)) |> 
+  ggplot(aes(x = years, y = co2equ)) + 
+  annotate(geom = "rect", xmin = 1990, xmax = 1998, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+    ) + 
+  annotate(geom = "rect", xmin = 1996, xmax = 2017, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+    )  +
+  annotate(geom = "rect", xmin = 2015, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+    ) +
+  geom_area(alpha = 1, fill = "#1F77B4") +
+  # scale_fill_manual(values = c('CH4' = 'cyan4', 'CO2'='red', 'N2O'='steelblue'))+
+  scale_y_continuous( breaks = scales::pretty_breaks(n = 6),  expand = c(0, NA),labels = scales::label_number(big.mark = ','), name = expression(CO[2]~equ~(Gg))) +
+  scale_x_continuous(breaks = seq(1990,2022,5)) +
+  theme_minimal(base_size = 12) +
+  theme(axis.title.x = element_blank(), legend.position = c(.12,.85), legend.title = element_blank(), panel.grid.minor = element_blank())
+
+
+```
+
+###	Methodological issues
+###	Category specific QA/QC and verification
+
+##	Description of uncertainties
+##	Time series consistency issues
+##	Recalculations
+##	Improvements
+##	References
+
+
+
+
