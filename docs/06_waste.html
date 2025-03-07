@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -99,7 +119,7 @@ ul.task-list li input[type="checkbox"] {
     <div class="sidebar-title mb-0 py-0">
       <a href="./">National Inventory Report</a> 
         <div class="sidebar-tools-main tools-wide">
-    <a href="https://github.com/lugoa/nir25/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <a href="https://github.com/lugoga/nirtz" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
       <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
@@ -214,22 +234,44 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#sector-overview" id="toc-sector-overview" class="nav-link active" data-scroll-target="#sector-overview"><span class="header-section-number">6.1</span> Sector overview</a></li>
-  <li><a href="#methods-data-sources-and-assumptions" id="toc-methods-data-sources-and-assumptions" class="nav-link" data-scroll-target="#methods-data-sources-and-assumptions"><span class="header-section-number">6.2</span> Methods, data sources and assumptions</a></li>
-  <li><a href="#quality-assurance-and-quality-control" id="toc-quality-assurance-and-quality-control" class="nav-link" data-scroll-target="#quality-assurance-and-quality-control"><span class="header-section-number">6.3</span> Quality assurance and quality control</a></li>
-  <li><a href="#description-of-uncertainties" id="toc-description-of-uncertainties" class="nav-link" data-scroll-target="#description-of-uncertainties"><span class="header-section-number">6.4</span> Description of uncertainties</a></li>
-  <li><a href="#time-series-consistency-issues" id="toc-time-series-consistency-issues" class="nav-link" data-scroll-target="#time-series-consistency-issues"><span class="header-section-number">6.5</span> Time series consistency issues</a></li>
-  <li><a href="#recalculations" id="toc-recalculations" class="nav-link" data-scroll-target="#recalculations"><span class="header-section-number">6.6</span> Recalculations</a></li>
-  <li><a href="#improvements" id="toc-improvements" class="nav-link" data-scroll-target="#improvements"><span class="header-section-number">6.7</span> Improvements</a></li>
+  <li><a href="#sector-overview" id="toc-sector-overview" class="nav-link active" data-scroll-target="#sector-overview"><span class="header-section-number">6.1</span> Sector overview</a>
+  <ul class="collapse">
+  <li><a href="#category-4.a.1---managed-waste-disposal-sites" id="toc-category-4.a.1---managed-waste-disposal-sites" class="nav-link" data-scroll-target="#category-4.a.1---managed-waste-disposal-sites"><span class="header-section-number">6.1.1</span> Category 4.A.1 - Managed Waste Disposal Sites</a></li>
+  <li><a href="#category-4.a.2---unmanaged-waste-disposal-sites" id="toc-category-4.a.2---unmanaged-waste-disposal-sites" class="nav-link" data-scroll-target="#category-4.a.2---unmanaged-waste-disposal-sites"><span class="header-section-number">6.1.2</span> Category 4.A.2 - Unmanaged Waste Disposal Sites</a></li>
+  </ul></li>
+  <li><a href="#methods-data-sources-and-assumptions" id="toc-methods-data-sources-and-assumptions" class="nav-link" data-scroll-target="#methods-data-sources-and-assumptions"><span class="header-section-number">6.2</span> Methods – data sources and assumptions</a>
+  <ul class="collapse">
+  <li><a href="#population-data" id="toc-population-data" class="nav-link" data-scroll-target="#population-data"><span class="header-section-number">6.2.1</span> Population Data</a></li>
+  </ul></li>
+  <li><a href="#gross-domestic-product-gdp" id="toc-gross-domestic-product-gdp" class="nav-link" data-scroll-target="#gross-domestic-product-gdp"><span class="header-section-number">6.3</span> Gross Domestic Product (GDP)</a>
+  <ul class="collapse">
+  <li><a href="#per-capita-waste-generation" id="toc-per-capita-waste-generation" class="nav-link" data-scroll-target="#per-capita-waste-generation"><span class="header-section-number">6.3.1</span> Per Capita Waste Generation</a></li>
+  <li><a href="#percent-of-waste-disposed-to-solid-waste-disposal-sites-swds" id="toc-percent-of-waste-disposed-to-solid-waste-disposal-sites-swds" class="nav-link" data-scroll-target="#percent-of-waste-disposed-to-solid-waste-disposal-sites-swds"><span class="header-section-number">6.3.2</span> Percent of Waste Disposed to Solid Waste Disposal Sites (SWDS)</a></li>
+  <li><a href="#category-specific-activity-data-inputs" id="toc-category-specific-activity-data-inputs" class="nav-link" data-scroll-target="#category-specific-activity-data-inputs"><span class="header-section-number">6.3.3</span> Category-Specific Activity Data Inputs</a></li>
+  <li><a href="#category-specific-activity-data-inputs-1" id="toc-category-specific-activity-data-inputs-1" class="nav-link" data-scroll-target="#category-specific-activity-data-inputs-1"><span class="header-section-number">6.3.4</span> Category-Specific Activity Data Inputs</a></li>
+  </ul></li>
+  <li><a href="#quality-assurance-and-quality-control" id="toc-quality-assurance-and-quality-control" class="nav-link" data-scroll-target="#quality-assurance-and-quality-control"><span class="header-section-number">6.4</span> Quality assurance and quality control</a></li>
+  <li><a href="#description-of-uncertainties" id="toc-description-of-uncertainties" class="nav-link" data-scroll-target="#description-of-uncertainties"><span class="header-section-number">6.5</span> Description of uncertainties</a></li>
+  <li><a href="#time-series-consistency-issues" id="toc-time-series-consistency-issues" class="nav-link" data-scroll-target="#time-series-consistency-issues"><span class="header-section-number">6.6</span> Time series consistency issues</a></li>
+  <li><a href="#recalculations" id="toc-recalculations" class="nav-link" data-scroll-target="#recalculations"><span class="header-section-number">6.7</span> Recalculations</a></li>
+  <li><a href="#improvements-measures-for-the-waste-sector" id="toc-improvements-measures-for-the-waste-sector" class="nav-link" data-scroll-target="#improvements-measures-for-the-waste-sector"><span class="header-section-number">6.8</span> improvements measures for the Waste Sector</a>
+  <ul class="collapse">
+  <li><a href="#development-of-a-centralized-data-collection-and-management-system" id="toc-development-of-a-centralized-data-collection-and-management-system" class="nav-link" data-scroll-target="#development-of-a-centralized-data-collection-and-management-system"><span class="header-section-number">6.8.1</span> Development of a Centralized Data Collection and Management System</a></li>
+  <li><a href="#comprehensive-national-waste-sector-baseline-studies" id="toc-comprehensive-national-waste-sector-baseline-studies" class="nav-link" data-scroll-target="#comprehensive-national-waste-sector-baseline-studies"><span class="header-section-number">6.8.2</span> Comprehensive National Waste Sector Baseline Studies</a></li>
+  <li><a href="#capacity-building-and-technical-training" id="toc-capacity-building-and-technical-training" class="nav-link" data-scroll-target="#capacity-building-and-technical-training"><span class="header-section-number">6.8.3</span> Capacity Building and Technical Training</a></li>
+  <li><a href="#strengthening-institutional-coordination-and-governance" id="toc-strengthening-institutional-coordination-and-governance" class="nav-link" data-scroll-target="#strengthening-institutional-coordination-and-governance"><span class="header-section-number">6.8.4</span> Strengthening Institutional Coordination and Governance</a></li>
+  <li><a href="#leveraging-technology-for-data-collection-and-monitoring" id="toc-leveraging-technology-for-data-collection-and-monitoring" class="nav-link" data-scroll-target="#leveraging-technology-for-data-collection-and-monitoring"><span class="header-section-number">6.8.5</span> Leveraging Technology for Data Collection and Monitoring</a></li>
+  <li><a href="#establishing-a-review-and-updating-framework" id="toc-establishing-a-review-and-updating-framework" class="nav-link" data-scroll-target="#establishing-a-review-and-updating-framework"><span class="header-section-number">6.8.6</span> Establishing a Review and Updating Framework</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/lugoa/nir25/edit/main/06_waste.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/lugoga/nirtz/edit/main/06_waste.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">WASTE</span></h1>
+<h1 class="title"><span id="sec-waste" class="quarto-section-identifier"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">WASTE</span></span></h1>
 </div>
 
 
@@ -246,28 +288,724 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<p>This chapter focuses on the waste sector, a critical component of national greenhouse gas (GHG) inventories, encompassing a range of activities that contribute to emissions through the management and treatment of waste materials. The waste sector is broadly categorized into four primary sources: solid waste disposal, biological treatment of solid waste, incineration and open burning of waste, and wastewater treatment and discharge (<a href="#tbl-waste-categories" class="quarto-xref">Table&nbsp;<span>6.1</span></a>). Each of these categories represents distinct processes that generate emissions of key GHGs, including methane (CH<sub>4</sub>), carbon dioxide (CO<sub>2</sub>), and nitrous oxide (N<sub>2</sub>O), depending on the nature of the waste and the management practices employed.</p>
 <section id="sector-overview" class="level2" data-number="6.1">
 <h2 data-number="6.1" class="anchored" data-anchor-id="sector-overview"><span class="header-section-number">6.1</span> Sector overview</h2>
+<p>The <strong>IPCC Guidelines</strong> classify waste activities into four primary categories – solid waste disposal; biological treatement of solid waste; incineration and open buring of waste; and wastewater treatement and discharge <span class="citation" data-cites="ipcc2006">(<a href="references.html#ref-ipcc2006" role="doc-biblioref">IPCC 2006</a>)</span>. <strong>Solid Waste Disposal</strong> is a significant source of methane (CH₄) emissions, resulting from the anaerobic decomposition of organic matter in landfills and dumpsites. <span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span> guideline differentiates between <em>managed landfills</em> – often include gas collection and control systems, and <em>unmanaged or open dumps</em> – lack such measures. <strong>Biological Treatment of Solid Waste</strong> include biological processes, such as composting and anaerobic digestion, which play a vital role in reducing waste volumes and recovering resources. However, these processes can emit CH<sub>4</sub> and N<sub>2</sub>O. <strong>Incineration and Open Burning of Waste</strong> contribute primarily to carbon dioxide (CO<sub>2</sub>) emissions, though incomplete combustion can also generate methane (CH<sub>4</sub>) and nitrous oxide (N<sub>2</sub>O).</p>
+<p><strong>Wastewater Treatment and Discharge</strong> emission arise primarily from the biological degradation of organic matter in domestic and industrial wastewater. Anaerobic conditions in lagoons, septic tanks, and sludge handling facilities can lead to methane (CH<sub>4</sub>) production, while nitrous oxide (N<sub>2</sub>O) is generated through nitrification and denitrification processes in wastewater treatment plants. The IPCC guideline categorizing these waste activities enable comprehensive and consistent reporting of emissions, facilitating targeted mitigation efforts and enhancing the accuracy of national GHG inventories. However, for this inventory only category <strong>4.A - Solid Waste Disposal</strong> had data for estimation. The remaining were not estimated due to a lack of available data or methodological constraints (<a href="#tbl-waste-categories" class="quarto-xref">Table&nbsp;<span>6.1</span></a>). As a result, the assessment in this report primarily present emissions from Solid Waste Disposal, while acknowledging the need for improved data collection and methodologies to evaluate the other categories in future inventories.</p>
+<div class="cell">
+<div id="tbl-waste-categories" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-waste-categories-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;6.1: Trends of CO<sub>2</sub>e emission by major categories in the waste sector
+</figcaption>
+<div aria-describedby="tbl-waste-categories-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="ppytxkxhez" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ppytxkxhez table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ppytxkxhez thead, #ppytxkxhez tbody, #ppytxkxhez tfoot, #ppytxkxhez tr, #ppytxkxhez td, #ppytxkxhez th {
+  border-style: none;
+}
+
+#ppytxkxhez p {
+  margin: 0;
+  padding: 0;
+}
+
+#ppytxkxhez .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ppytxkxhez .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ppytxkxhez .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ppytxkxhez .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ppytxkxhez .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ppytxkxhez .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ppytxkxhez .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ppytxkxhez .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ppytxkxhez .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ppytxkxhez .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ppytxkxhez .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ppytxkxhez .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ppytxkxhez .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ppytxkxhez .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ppytxkxhez .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppytxkxhez .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ppytxkxhez .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ppytxkxhez .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ppytxkxhez .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppytxkxhez .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ppytxkxhez .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppytxkxhez .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ppytxkxhez .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppytxkxhez .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppytxkxhez .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppytxkxhez .gt_left {
+  text-align: left;
+}
+
+#ppytxkxhez .gt_center {
+  text-align: center;
+}
+
+#ppytxkxhez .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ppytxkxhez .gt_font_normal {
+  font-weight: normal;
+}
+
+#ppytxkxhez .gt_font_bold {
+  font-weight: bold;
+}
+
+#ppytxkxhez .gt_font_italic {
+  font-style: italic;
+}
+
+#ppytxkxhez .gt_super {
+  font-size: 65%;
+}
+
+#ppytxkxhez .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ppytxkxhez .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ppytxkxhez .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ppytxkxhez .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ppytxkxhez .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ppytxkxhez .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ppytxkxhez .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ppytxkxhez .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ppytxkxhez div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="a::stub" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"></th>
+<th id="nanoplots" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Trends CO<sub>2</sub> equ<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td id="stub_1_1" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">4.A - Solid Waste Disposal</td>
+<td class="gt_row gt_left" headers="stub_1_1 nanoplots" style="padding-top: 0; padding-bottom: 0; vertical-align: middle; overflow-x: visible"><div>
+<svg role="img" viewbox="0 0 1060 130" style="
+height:2em;
+margin-left:auto;
+margin-right:auto;
+font-size:inherit;
+overflow:visible;
+vertical-align:middle;
+position:relative;">
+<defs> <pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"> <path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"> </path> </pattern> </defs>
+<style>text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover rect { fill: transparent; stroke: transparent; color: blue; } .boxplot-line:hover text { stroke: white; fill: #212427; } .boxplot-line:hover rect { fill: transparent; stroke: transparent; } .horizontal-line:hover text { stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; }</style>
+<line x1="22.5" y1="115" x2="1037.5" y2="115" stroke="#BFBFBF" stroke-width="2"></line> <rect x="40" y="110.823042002238" width="20" height="4.17695799776178" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="70.9677419354839" y="110.443505713132" width="20" height="4.55649428686822" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="101.935483870968" y="110.028505738711" width="20" height="4.97149426128888" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="132.903225806452" y="109.576671383757" width="20" height="5.42332861624266" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="163.870967741935" y="109.086775304987" width="20" height="5.9132246950133" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="194.838709677419" y="108.557410157991" width="20" height="6.44258984200911" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="225.806451612903" y="107.982535450762" width="20" height="7.01746454923817" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="256.774193548387" y="107.356179069945" width="20" height="7.64382093005536" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="287.741935483871" y="106.682345962786" width="20" height="8.31765403721441" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="318.709677419355" y="105.922945558664" width="20" height="9.07705444133575" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="349.677419354839" y="105.065640655602" width="20" height="9.93435934439782" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="380.645161290323" y="104.110148376731" width="20" height="10.8898516232688" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="411.612903225806" y="103.041417009351" width="20" height="11.9585829906486" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="442.58064516129" y="101.917092172498" width="20" height="13.0829078275019" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="473.548387096774" y="100.757276967207" width="20" height="14.2427230327935" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="504.516129032258" y="99.4367108753427" width="20" height="15.5632891246573" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="535.483870967742" y="97.9338838450657" width="20" height="17.0661161549343" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="566.451612903226" y="96.2344451248177" width="20" height="18.7655548751823" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="597.41935483871" y="94.2954092718366" width="20" height="20.7045907281634" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="628.387096774194" y="92.075187269289" width="20" height="22.924812730711" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="659.354838709677" y="89.5635337160637" width="20" height="25.4364662839363" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="690.322580645161" y="86.7179364969235" width="20" height="28.2820635030765" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="721.290322580645" y="83.4735305439585" width="20" height="31.5264694560415" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="752.258064516129" y="79.4202889180268" width="20" height="35.5797110819732" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="783.225806451613" y="74.6796606926819" width="20" height="40.3203393073181" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="814.193548387097" y="69.2296949295021" width="20" height="45.7703050704979" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="845.161290322581" y="62.9099666063828" width="20" height="52.0900333936172" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="876.129032258065" y="55.5347876162831" width="20" height="59.4652123837169" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="907.096774193548" y="47.189920480027" width="20" height="67.810079519973" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="938.064516129032" y="38.2218864219557" width="20" height="76.7781135780443" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="969.032258064516" y="28.5769183355475" width="20" height="86.4230816644525" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <rect x="1000" y="15" width="20" height="100" stroke="#3290CC" stroke-width="4" fill="#3FB5FF"></rect> <g class="y-axis-line"> <rect x="0" y="0" width="65" height="130" stroke="transparent" stroke-width="0" fill="transparent"></rect> <text x="0" y="19" fill="transparent" stroke="transparent" font-size="25">1.09K</text> <text x="0" y="126" fill="transparent" stroke="transparent" font-size="25">0</text></g> <g class="vert-line"> <rect x="40" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="60" y="20" fill="transparent" stroke="transparent" font-size="30px">45.6</text></g> <g class="vert-line"> <rect x="70.9677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="90.9677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">49.8</text></g> <g class="vert-line"> <rect x="101.935483870968" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="121.935483870968" y="20" fill="transparent" stroke="transparent" font-size="30px">54.3</text></g> <g class="vert-line"> <rect x="132.903225806452" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="152.903225806452" y="20" fill="transparent" stroke="transparent" font-size="30px">59.2</text></g> <g class="vert-line"> <rect x="163.870967741935" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="183.870967741935" y="20" fill="transparent" stroke="transparent" font-size="30px">64.6</text></g> <g class="vert-line"> <rect x="194.838709677419" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="214.838709677419" y="20" fill="transparent" stroke="transparent" font-size="30px">70.4</text></g> <g class="vert-line"> <rect x="225.806451612903" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="245.806451612903" y="20" fill="transparent" stroke="transparent" font-size="30px">76.7</text></g> <g class="vert-line"> <rect x="256.774193548387" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="276.774193548387" y="20" fill="transparent" stroke="transparent" font-size="30px">83.5</text></g> <g class="vert-line"> <rect x="287.741935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="307.741935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">90.9</text></g> <g class="vert-line"> <rect x="318.709677419355" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="338.709677419355" y="20" fill="transparent" stroke="transparent" font-size="30px">99.1</text></g> <g class="vert-line"> <rect x="349.677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="369.677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">109</text></g> <g class="vert-line"> <rect x="380.645161290323" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="400.645161290323" y="20" fill="transparent" stroke="transparent" font-size="30px">119</text></g> <g class="vert-line"> <rect x="411.612903225806" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="431.612903225806" y="20" fill="transparent" stroke="transparent" font-size="30px">131</text></g> <g class="vert-line"> <rect x="442.58064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="462.58064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">143</text></g> <g class="vert-line"> <rect x="473.548387096774" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="493.548387096774" y="20" fill="transparent" stroke="transparent" font-size="30px">156</text></g> <g class="vert-line"> <rect x="504.516129032258" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="524.516129032258" y="20" fill="transparent" stroke="transparent" font-size="30px">170</text></g> <g class="vert-line"> <rect x="535.483870967742" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="555.483870967742" y="20" fill="transparent" stroke="transparent" font-size="30px">186</text></g> <g class="vert-line"> <rect x="566.451612903226" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="586.451612903226" y="20" fill="transparent" stroke="transparent" font-size="30px">205</text></g> <g class="vert-line"> <rect x="597.41935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="617.41935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">226</text></g> <g class="vert-line"> <rect x="628.387096774194" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="648.387096774194" y="20" fill="transparent" stroke="transparent" font-size="30px">250</text></g> <g class="vert-line"> <rect x="659.354838709677" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="679.354838709677" y="20" fill="transparent" stroke="transparent" font-size="30px">278</text></g> <g class="vert-line"> <rect x="690.322580645161" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="710.322580645161" y="20" fill="transparent" stroke="transparent" font-size="30px">309</text></g> <g class="vert-line"> <rect x="721.290322580645" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="741.290322580645" y="20" fill="transparent" stroke="transparent" font-size="30px">344</text></g> <g class="vert-line"> <rect x="752.258064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="772.258064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">389</text></g> <g class="vert-line"> <rect x="783.225806451613" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="803.225806451613" y="20" fill="transparent" stroke="transparent" font-size="30px">440</text></g> <g class="vert-line"> <rect x="814.193548387097" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="834.193548387097" y="20" fill="transparent" stroke="transparent" font-size="30px">500</text></g> <g class="vert-line"> <rect x="845.161290322581" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="865.161290322581" y="20" fill="transparent" stroke="transparent" font-size="30px">569</text></g> <g class="vert-line"> <rect x="876.129032258065" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="896.129032258065" y="20" fill="transparent" stroke="transparent" font-size="30px">650</text></g> <g class="vert-line"> <rect x="907.096774193548" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="927.096774193548" y="20" fill="transparent" stroke="transparent" font-size="30px">741</text></g> <g class="vert-line"> <rect x="938.064516129032" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="958.064516129032" y="20" fill="transparent" stroke="transparent" font-size="30px">839</text></g> <g class="vert-line"> <rect x="969.032258064516" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="989.032258064516" y="20" fill="transparent" stroke="transparent" font-size="30px">944</text></g> <g class="vert-line"> <rect x="1000" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="1020" y="20" fill="transparent" stroke="transparent" font-size="30px">1.09K</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="even">
+<td id="stub_1_2" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">4.B - Biological Treatment of Solid Waste</td>
+<td class="gt_row gt_left" headers="stub_1_2 nanoplots" style="padding-top: 0; padding-bottom: 0; vertical-align: middle; overflow-x: visible"><div>
+<svg role="img" viewbox="0 0 1060 130" style="
+height:2em;
+margin-left:auto;
+margin-right:auto;
+font-size:inherit;
+overflow:visible;
+vertical-align:middle;
+position:relative;">
+<defs> <pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"> <path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"> </path> </pattern> </defs>
+<style>text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover rect { fill: transparent; stroke: transparent; color: blue; } .boxplot-line:hover text { stroke: white; fill: #212427; } .boxplot-line:hover rect { fill: transparent; stroke: transparent; } .horizontal-line:hover text { stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; }</style>
+<line x1="22.5" y1="65" x2="1037.5" y2="65" stroke="#BFBFBF" stroke-width="2"></line> <rect x="40" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="70.9677419354839" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="101.935483870968" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="132.903225806452" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="163.870967741935" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="194.838709677419" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="225.806451612903" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="256.774193548387" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="287.741935483871" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="318.709677419355" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="349.677419354839" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="380.645161290323" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="411.612903225806" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="442.58064516129" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="473.548387096774" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="504.516129032258" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="535.483870967742" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="566.451612903226" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="597.41935483871" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="628.387096774194" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="659.354838709677" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="690.322580645161" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="721.290322580645" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="752.258064516129" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="783.225806451613" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="814.193548387097" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="845.161290322581" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="876.129032258065" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="907.096774193548" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="938.064516129032" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="969.032258064516" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="1000" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <g class="y-axis-line"> <rect x="0" y="0" width="65" height="130" stroke="transparent" stroke-width="0" fill="transparent"></rect> <text x="0" y="19" fill="transparent" stroke="transparent" font-size="25">5</text> <text x="0" y="126" fill="transparent" stroke="transparent" font-size="25">−5</text></g> <g class="vert-line"> <rect x="40" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="60" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="70.9677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="90.9677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="101.935483870968" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="121.935483870968" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="132.903225806452" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="152.903225806452" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="163.870967741935" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="183.870967741935" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="194.838709677419" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="214.838709677419" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="225.806451612903" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="245.806451612903" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="256.774193548387" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="276.774193548387" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="287.741935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="307.741935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="318.709677419355" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="338.709677419355" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="349.677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="369.677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="380.645161290323" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="400.645161290323" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="411.612903225806" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="431.612903225806" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="442.58064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="462.58064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="473.548387096774" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="493.548387096774" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="504.516129032258" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="524.516129032258" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="535.483870967742" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="555.483870967742" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="566.451612903226" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="586.451612903226" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="597.41935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="617.41935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="628.387096774194" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="648.387096774194" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="659.354838709677" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="679.354838709677" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="690.322580645161" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="710.322580645161" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="721.290322580645" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="741.290322580645" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="752.258064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="772.258064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="783.225806451613" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="803.225806451613" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="814.193548387097" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="834.193548387097" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="845.161290322581" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="865.161290322581" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="876.129032258065" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="896.129032258065" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="907.096774193548" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="927.096774193548" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="938.064516129032" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="958.064516129032" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="969.032258064516" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="989.032258064516" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="1000" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="1020" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="odd">
+<td id="stub_1_3" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">4.C - Incineration and Open Burning of Waste</td>
+<td class="gt_row gt_left" headers="stub_1_3 nanoplots" style="padding-top: 0; padding-bottom: 0; vertical-align: middle; overflow-x: visible"><div>
+<svg role="img" viewbox="0 0 1060 130" style="
+height:2em;
+margin-left:auto;
+margin-right:auto;
+font-size:inherit;
+overflow:visible;
+vertical-align:middle;
+position:relative;">
+<defs> <pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"> <path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"> </path> </pattern> </defs>
+<style>text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover rect { fill: transparent; stroke: transparent; color: blue; } .boxplot-line:hover text { stroke: white; fill: #212427; } .boxplot-line:hover rect { fill: transparent; stroke: transparent; } .horizontal-line:hover text { stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; }</style>
+<line x1="22.5" y1="65" x2="1037.5" y2="65" stroke="#BFBFBF" stroke-width="2"></line> <rect x="40" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="70.9677419354839" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="101.935483870968" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="132.903225806452" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="163.870967741935" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="194.838709677419" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="225.806451612903" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="256.774193548387" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="287.741935483871" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="318.709677419355" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="349.677419354839" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="380.645161290323" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="411.612903225806" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="442.58064516129" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="473.548387096774" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="504.516129032258" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="535.483870967742" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="566.451612903226" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="597.41935483871" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="628.387096774194" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="659.354838709677" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="690.322580645161" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="721.290322580645" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="752.258064516129" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="783.225806451613" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="814.193548387097" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="845.161290322581" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="876.129032258065" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="907.096774193548" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="938.064516129032" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="969.032258064516" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="1000" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <g class="y-axis-line"> <rect x="0" y="0" width="65" height="130" stroke="transparent" stroke-width="0" fill="transparent"></rect> <text x="0" y="19" fill="transparent" stroke="transparent" font-size="25">5</text> <text x="0" y="126" fill="transparent" stroke="transparent" font-size="25">−5</text></g> <g class="vert-line"> <rect x="40" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="60" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="70.9677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="90.9677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="101.935483870968" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="121.935483870968" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="132.903225806452" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="152.903225806452" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="163.870967741935" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="183.870967741935" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="194.838709677419" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="214.838709677419" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="225.806451612903" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="245.806451612903" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="256.774193548387" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="276.774193548387" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="287.741935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="307.741935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="318.709677419355" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="338.709677419355" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="349.677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="369.677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="380.645161290323" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="400.645161290323" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="411.612903225806" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="431.612903225806" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="442.58064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="462.58064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="473.548387096774" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="493.548387096774" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="504.516129032258" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="524.516129032258" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="535.483870967742" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="555.483870967742" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="566.451612903226" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="586.451612903226" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="597.41935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="617.41935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="628.387096774194" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="648.387096774194" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="659.354838709677" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="679.354838709677" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="690.322580645161" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="710.322580645161" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="721.290322580645" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="741.290322580645" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="752.258064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="772.258064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="783.225806451613" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="803.225806451613" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="814.193548387097" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="834.193548387097" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="845.161290322581" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="865.161290322581" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="876.129032258065" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="896.129032258065" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="907.096774193548" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="927.096774193548" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="938.064516129032" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="958.064516129032" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="969.032258064516" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="989.032258064516" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="1000" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="1020" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g>
+</svg>
+</div></td>
+</tr>
+<tr class="even">
+<td id="stub_1_4" class="gt_row gt_left gt_stub" data-quarto-table-cell-role="th" scope="row">4.D - Wastewater Treatment and Discharge</td>
+<td class="gt_row gt_left" headers="stub_1_4 nanoplots" style="padding-top: 0; padding-bottom: 0; vertical-align: middle; overflow-x: visible"><div>
+<svg role="img" viewbox="0 0 1060 130" style="
+height:2em;
+margin-left:auto;
+margin-right:auto;
+font-size:inherit;
+overflow:visible;
+vertical-align:middle;
+position:relative;">
+<defs> <pattern id="area_pattern" width="8" height="8" patternunits="userSpaceOnUse"> <path class="pattern-line" d="M 0,8 l 8,-8 M -1,1 l 4,-4 M 6,10 l 4,-4" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" shape-rendering="geometricPrecision"> </path> </pattern> </defs>
+<style>text { font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace; stroke-width: 0.15em; paint-order: stroke; stroke-linejoin: round; cursor: default; } .vert-line:hover rect { fill: #911EB4; fill-opacity: 40%; stroke: #FFFFFF60; color: red; } .vert-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover text { stroke: white; fill: #212427; } .horizontal-line:hover rect { fill: transparent; stroke: transparent; color: blue; } .boxplot-line:hover text { stroke: white; fill: #212427; } .boxplot-line:hover rect { fill: transparent; stroke: transparent; } .horizontal-line:hover text { stroke: white; fill: #212427; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; } .y-axis-line:hover rect { fill: #EDEDED; fill-opacity: 60%; stroke: #FFFFFF60; color: red; } .y-axis-line:hover text { stroke: white; stroke-width: 0.20em; fill: #1A1C1F; } .ref-line:hover rect { stroke: #FFFFFF60; } .ref-line:hover line { stroke: #FF0000; } .ref-line:hover text { stroke: white; fill: #212427; }</style>
+<line x1="22.5" y1="65" x2="1037.5" y2="65" stroke="#BFBFBF" stroke-width="2"></line> <rect x="40" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="70.9677419354839" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="101.935483870968" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="132.903225806452" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="163.870967741935" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="194.838709677419" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="225.806451612903" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="256.774193548387" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="287.741935483871" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="318.709677419355" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="349.677419354839" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="380.645161290323" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="411.612903225806" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="442.58064516129" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="473.548387096774" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="504.516129032258" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="535.483870967742" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="566.451612903226" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="597.41935483871" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="628.387096774194" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="659.354838709677" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="690.322580645161" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="721.290322580645" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="752.258064516129" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="783.225806451613" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="814.193548387097" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="845.161290322581" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="876.129032258065" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="907.096774193548" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="938.064516129032" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="969.032258064516" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <rect x="1000" y="64" width="20" height="2" stroke="#808080" stroke-width="4" fill="#808080"></rect> <g class="y-axis-line"> <rect x="0" y="0" width="65" height="130" stroke="transparent" stroke-width="0" fill="transparent"></rect> <text x="0" y="19" fill="transparent" stroke="transparent" font-size="25">5</text> <text x="0" y="126" fill="transparent" stroke="transparent" font-size="25">−5</text></g> <g class="vert-line"> <rect x="40" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="60" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="70.9677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="90.9677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="101.935483870968" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="121.935483870968" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="132.903225806452" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="152.903225806452" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="163.870967741935" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="183.870967741935" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="194.838709677419" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="214.838709677419" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="225.806451612903" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="245.806451612903" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="256.774193548387" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="276.774193548387" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="287.741935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="307.741935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="318.709677419355" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="338.709677419355" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="349.677419354839" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="369.677419354839" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="380.645161290323" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="400.645161290323" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="411.612903225806" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="431.612903225806" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="442.58064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="462.58064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="473.548387096774" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="493.548387096774" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="504.516129032258" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="524.516129032258" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="535.483870967742" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="555.483870967742" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="566.451612903226" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="586.451612903226" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="597.41935483871" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="617.41935483871" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="628.387096774194" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="648.387096774194" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="659.354838709677" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="679.354838709677" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="690.322580645161" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="710.322580645161" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="721.290322580645" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="741.290322580645" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="752.258064516129" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="772.258064516129" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="783.225806451613" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="803.225806451613" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="814.193548387097" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="834.193548387097" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="845.161290322581" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="865.161290322581" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="876.129032258065" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="896.129032258065" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="907.096774193548" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="927.096774193548" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="938.064516129032" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="958.064516129032" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="969.032258064516" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="989.032258064516" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g> <g class="vert-line"> <rect x="1000" y="0" width="20" height="130" stroke="transparent" stroke-width="12" fill="transparent"></rect> <text x="1020" y="20" fill="transparent" stroke="transparent" font-size="30px">0</text></g>
+</svg>
+</div></td>
+</tr>
+</tbody><tfoot class="gt_footnotes">
+<tr class="odd">
+<td colspan="2" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> Emission from 1990 through 2021.</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<section id="category-4.a.1---managed-waste-disposal-sites" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="category-4.a.1---managed-waste-disposal-sites"><span class="header-section-number">6.1.1</span> Category 4.A.1 - Managed Waste Disposal Sites</h3>
+<p>In 2021, emissions from the managed waste disposal sites category was 97 Gg CO₂e, representing a nearly ninefold increase (898%) compared to the 10 Gg CO₂e recorded in 2000 (<a href="#fig-managed" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>). This significant rise in emissions highlights the growing impact of waste management practices on greenhouse gas (GHG) emissions over the past two decades. The increase can be attributed to several factors, including rapid urbanization, population growth, and the expansion of waste generation in tandem with economic development. While managed disposal sites are designed to mitigate environmental impacts through measures such as methane recovery and flaring, the substantial growth in emissions underscores the need for enhanced waste management strategies, including improved gas capture technologies, waste reduction initiatives, and the promotion of alternative waste treatment methods such as composting and recycling.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-managed" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-managed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_waste_files/figure-html/fig-managed-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-managed-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.1: CO<sub>2</sub>e emission from Managed Waste Disposal Sites
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="category-4.a.2---unmanaged-waste-disposal-sites" class="level3" data-number="6.1.2">
+<h3 data-number="6.1.2" class="anchored" data-anchor-id="category-4.a.2---unmanaged-waste-disposal-sites"><span class="header-section-number">6.1.2</span> Category 4.A.2 - Unmanaged Waste Disposal Sites</h3>
+<p>Similar to the trend observed in managed waste disposal sites (<a href="#fig-managed" class="quarto-xref">Figure&nbsp;<span>6.1</span></a>), emissions from unmanaged waste disposal sites have also shown a steady increase over the inventory period (<a href="#fig-unmanaged" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>), albeit at a significantly higher magnitude. In 2021, emissions from unmanaged waste disposal sites was 996 Gg CO<sub>2</sub>e, representing an increase of more than ninefold (907%) compared to the 99 Gg CO<sub>2</sub>e recorded in 2000 (<a href="#fig-unmanaged" class="quarto-xref">Figure&nbsp;<span>6.2</span></a>). This substantial rise in emissions underscores the environmental challenges posed by unmanaged waste disposal practices, which are often characterized by open dumpsites lacking gas collection or control systems. The increase can be attributed to factors such as rapid urbanization, population growth, and insufficient waste management infrastructure, which have led to higher volumes of waste being disposed of in unregulated sites.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-unmanaged" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-unmanaged-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="06_waste_files/figure-html/fig-unmanaged-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-unmanaged-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6.2: CO<sub>2</sub>e emission from 4.A.2 - Unmanaged Waste Disposal Sites
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="methods-data-sources-and-assumptions" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="methods-data-sources-and-assumptions"><span class="header-section-number">6.2</span> Methods, data sources and assumptions</h2>
+<h2 data-number="6.2" class="anchored" data-anchor-id="methods-data-sources-and-assumptions"><span class="header-section-number">6.2</span> Methods – data sources and assumptions</h2>
+<section id="population-data" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="population-data"><span class="header-section-number">6.2.1</span> Population Data</h3>
+<p>Population data is a critical input for estimating municipal solid waste (MSW) generation, as there is a strong correlation between population size and waste production (Mapunda et al., 2023). Studies indicate that as populations grow, the volume of waste generated increases proportionally. The First Order Decay (FOD) Model, as outlined in IPCC Volume 5, Chapter 3, was used to estimate emissions from solid waste disposal sites (SWDS). This model relies on population data and per capita waste generation rates to calculate total MSW. Population data for Tanzania Mainland for the years 1957, 1967, 1978, 1988, and 1994–2021 were obtained from the National Bureau of Statistics (NBS) and the Office of the Chief Government Statistician (OCGS), sourced from national population and housing census reports and population projections. For Zanzibar, population data for 1978, 1988, 1990–2003, 2002, and 2002–2021 were collected from the OCGS through similar reports.</p>
+<p>However, there were gaps in population data for the years 1950–1956, 1958–1966, 1968–1977, 1979–1987, and 1989–1993, as population censuses are conducted every 10 years, and no projections were available for these periods. To address these gaps, missing data for 1958–1966, 1968–1977, 1979–1987, and 1989–1993 were estimated using the interpolation method described in <span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span> and detailed in <a href="04_ippu.html#sec-recalculation" class="quarto-xref"><span>Section 4.7.2</span></a> with mathematical formula presented in <a href="04_ippu.html#eq-interp" class="quarto-xref">Equation&nbsp;<span>4.1</span></a>. Data for 1950–1956 were generated using backward extrapolation as guided in <span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span>. The extrapolation technique used is described in <span class="citation" data-cites="#sec-recalculation">(<a href="references.html#ref-#sec-recalculation" role="doc-biblioref"><strong>#sec-recalculation?</strong></a>)</span> with a mathematical formula in <a href="04_ippu.html#eq-extra" class="quarto-xref">Equation&nbsp;<span>4.2</span></a></p>
 </section>
-<section id="quality-assurance-and-quality-control" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="quality-assurance-and-quality-control"><span class="header-section-number">6.3</span> Quality assurance and quality control</h2>
 </section>
-<section id="description-of-uncertainties" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="description-of-uncertainties"><span class="header-section-number">6.4</span> Description of uncertainties</h2>
+<section id="gross-domestic-product-gdp" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="gross-domestic-product-gdp"><span class="header-section-number">6.3</span> Gross Domestic Product (GDP)</h2>
+<p>The FOD model also requires GDP data and industrial waste generation rates to estimate total industrial waste. <span class="citation" data-cites="unece2006economic">UNECE (<a href="references.html#ref-unece2006economic" role="doc-biblioref">2006</a>)</span> described that GDP reflects societal production and consumption patterns, which influence resource use and waste generation. GDP data for 1966–1986 and 1992–2021 were obtained from NBS. However, these data had gaps with missing for 1950–1965 and 1987–1991. To address these gaps, missing GDP data for 1950–1965 were estimated using backward extrapolation, following the IPCC guideline (<span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span>; <span class="citation" data-cites="IPCC2006vol4">Climate Change (IPCC) (<a href="references.html#ref-IPCC2006vol4" role="doc-biblioref">2006</a>)</span>). Similarly, data for 1987–1991 were also interpolated (<em>See</em> <a href="04_ippu.html#sec-recalculation" class="quarto-xref"><span>Section 4.7.2</span></a>).</p>
+<section id="per-capita-waste-generation" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="per-capita-waste-generation"><span class="header-section-number">6.3.1</span> Per Capita Waste Generation</h3>
+<p>Per capita waste generation, measured in kg/capita/year, varies across regions in Tanzania. For Zanzibar, the average per capita waste generation is 4.75 kg/capita/year, while for Tanzania Mainland ranges from 0.55 kg/capita/year (2017) to 0.66–0.95 kg/capita/year (2020). The value of 0.66 kg/capita/year was selected as the representative average for Tanzania Mainland, as it reflects the waste generation patterns of the majority of the population. Available data for Tanzania Mainland and Zanzibar were limited to 2017, 2018, and 2021. To convert daily waste generation rates to annual rates, the values were multiplied by 365 days. Missing data for Tanzania Mainland (1950–2016, 2018, 2019, and 2021) and Zanzibar (1950–2017 and 2019–2021) were filled using surrogate (<a href="04_ippu.html#eq-surro" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>), extrapolation (<a href="04_ippu.html#eq-extra" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>) and interpolation (<a href="04_ippu.html#eq-interp" class="quarto-xref">Equation&nbsp;<span>4.1</span></a>) techniques described in <a href="04_ippu.html#sec-recalculation" class="quarto-xref"><span>Section 4.7.2</span></a>.</p>
 </section>
-<section id="time-series-consistency-issues" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="time-series-consistency-issues"><span class="header-section-number">6.5</span> Time series consistency issues</h2>
+<section id="percent-of-waste-disposed-to-solid-waste-disposal-sites-swds" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="percent-of-waste-disposed-to-solid-waste-disposal-sites-swds"><span class="header-section-number">6.3.2</span> Percent of Waste Disposed to Solid Waste Disposal Sites (SWDS)</h3>
+<p>Waste disposed of in SWDS generates greenhouse gases such as methane (CH<sub>4</sub>), biogenic carbon dioxide (CO<sub>2</sub>), and non-methane volatile organic compounds (NMVOCs), as well as smaller amounts of nitrous oxide (N~2`O), nitrogen oxides (NO<sub>x</sub>), and carbon monoxide (CO). CH<sub>4</sub> emissions from SWDS contribute approximately 3–4% of global anthropogenic GHG emissions (IPCC, 2001). Data on the percentage of waste disposed of in SWDS were available only for 2021 (Tanzania Mainland) and 2018 (Zanzibar), sourced from the National Environmental Master Plan for Strategic Interventions and the Solid Waste Management Strategy, respectively. Missing data for Tanzania Mainland (1950–2020) and Zanzibar (1950–2017 and 2019–2021) were addressed using Surrogate Method (<a href="04_ippu.html#eq-surro" class="quarto-xref">Equation&nbsp;<span>4.3</span></a>) where population data were used as a surrogate to estimate the percentage of waste disposed of in SWDS for 1950–2020 (Tanzania Mainland) and 1950–2017 (Zanzibar). Data for 2019–2021 (Zanzibar) were estimated using extrapolation (<a href="04_ippu.html#eq-extra" class="quarto-xref">Equation&nbsp;<span>4.2</span></a>) as guided in <span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span> and <span class="citation" data-cites="IPCC2006vol4">Climate Change (IPCC) (<a href="references.html#ref-IPCC2006vol4" role="doc-biblioref">2006</a>)</span>.</p>
 </section>
-<section id="recalculations" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="recalculations"><span class="header-section-number">6.6</span> Recalculations</h2>
+<section id="category-specific-activity-data-inputs" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="category-specific-activity-data-inputs"><span class="header-section-number">6.3.3</span> Category-Specific Activity Data Inputs</h3>
+<p>For the Solid Waste Disposal category, activity data were based on the weight of wet waste collected in 2010, sourced from the United Republic of Tanzania. The emission factor value of 0.09% was used, as specified in the 2019 Refinement to the 2006 IPCC Guidelines (<span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span>) Emission factors for specific waste types were also applied:</p>
+<ul>
+<li><strong>Food Waste</strong>: An emission factor of 57% was used, sourced from the 2019 Refinement to the 2006 IPCC Guidelines, Volume 5, Chapter 2, Pages 2.28–2.33.</li>
+<li><strong>Paper and Cardboard</strong>: An emission factor of 10.9% was applied, based on the same guidelines.</li>
+<li><strong>Wood Waste</strong>: An emission factor of 2.4% was used.</li>
+<li><strong>Textile Waste</strong>: An emission factor of 6.7% was applied.</li>
+<li><strong>Metal Waste</strong>: An emission factor of 1.9% was used.</li>
+</ul>
+<p>These emission factors were selected because they are IPCC default values specific to Tanzania, ensuring consistency and alignment with international reporting standards.</p>
 </section>
-<section id="improvements" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="improvements"><span class="header-section-number">6.7</span> Improvements</h2>
+<section id="category-specific-activity-data-inputs-1" class="level3" data-number="6.3.4">
+<h3 data-number="6.3.4" class="anchored" data-anchor-id="category-specific-activity-data-inputs-1"><span class="header-section-number">6.3.4</span> Category-Specific Activity Data Inputs</h3>
+<p>Category: Solid Waste Disposal data are based on weight of wet waste collected in 2010. The regional condition is from the United Republic of Tanzania, this value was chosen because it is IPCC default value specific for Tanzania. The emission factor value is 0.09 % with reference to 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.15-2.27. According to IPCC solid waste emission is categorized as follows:</p>
+<ul>
+<li><strong>Food waste:</strong> The emission factor value of 57% was used which was sourced from the 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it was the IPCC default value specific for Tanzania.</li>
+<li><strong>Paper and Cardboard:</strong> The emission factor value used was 10.9% from the 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it is IPPC default value specific for Tanzania.</li>
+<li><strong>Wood waste:</strong> The emission factor value of 2.4% was used. The value was sourced from the 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it is IPCC default value specific for Tanzania.</li>
+<li><strong>Textile waste:</strong> The emission factor value of 6.7% was used as per the 2019 Refinement of the 2006 IPCC Guidelines for the National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it is IPCC default value specific for Tanzania.</li>
+<li><strong>Metal:</strong> The used emission factor value was 1.9% as outlined in the 2019 Refinement to the 2006 IPCC Guidelines for the National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it is IPCC default value specific for Tanzania.</li>
+</ul>
+</section>
+</section>
+<section id="quality-assurance-and-quality-control" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="quality-assurance-and-quality-control"><span class="header-section-number">6.4</span> Quality assurance and quality control</h2>
+<p>The national greenhouse gas (GHG) inventory was compiled by a team of experts drawn from various government and non-governmental institutions in Tanzania. The team was composed of wide range of expertize in the taskforcewith extensive experience in waste management and GHG inventory development. The compilation process adhered strictly to the 2006 Intergovernmental Panel on Climate Change (IPCC) Guidelines, ensuring compliance with internationally recognized methodologies and robust quality assurance and quality control (QA/QC) practices.</p>
+<p>The data and information used to compile the inventory were sourced from a variety of reliable channels, public datasets that are found online, hard copies of reports, and expert judgments obtained through discussions with national experts. These diverse data sources were carefully reviewed and verified to ensure their accuracy, relevance, and applicability to the subject matter. To further enhance the reliability of the inventory, experts from various waste sectors applied the IPCC Good Practice Guidance, which provided a structured framework for reviewing, integrating, and harmonizing data from different sources in a consistent and accurate manner.</p>
+<p>Data and information used to compile the National Inventory Report were accessed from various source including data from online datasets, data from hard copies of reports and expert judgement information from discussions with national experts. All data were verified and reviewed to ensure its accuracy and relevance for the subject matter.</p>
+</section>
+<section id="description-of-uncertainties" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="description-of-uncertainties"><span class="header-section-number">6.5</span> Description of uncertainties</h2>
+</section>
+<section id="time-series-consistency-issues" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="time-series-consistency-issues"><span class="header-section-number">6.6</span> Time series consistency issues</h2>
+</section>
+<section id="recalculations" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="recalculations"><span class="header-section-number">6.7</span> Recalculations</h2>
+</section>
+<section id="improvements-measures-for-the-waste-sector" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="improvements-measures-for-the-waste-sector"><span class="header-section-number">6.8</span> improvements measures for the Waste Sector</h2>
+<p>The current greenhouse gas emission inventory for Tanzania’s waste sector faced significant challenges, primarily due to the unavailability of data across various sub sectors outlined in the IPCC software and inconsistencies in records for certain years. Addressing these issues is crucial for enhancing the accuracy and completeness of future inventories, ensuring Tanzania meets its reporting obligations under UNFCCC. Below are proposed measures to enhance the accuracy, reliability and completeness of the inventory.</p>
+<section id="development-of-a-centralized-data-collection-and-management-system" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="development-of-a-centralized-data-collection-and-management-system"><span class="header-section-number">6.8.1</span> Development of a Centralized Data Collection and Management System</h3>
+<p>A key barrier to accurate inventories is the fragmented nature of data collection across different institutions and local governments. Establishing a centralized data management system would streamline this process by consolidating information from various waste management entities. This system would serve as a repository for data on municipal solid waste, industrial waste and wastewater thus allowing for easier access, monitoring and updates. Proposed Approach:</p>
+<ol type="i">
+<li>To develop a national waste data management platform that aggregates inputs from municipal councils, private waste companies and industrial facilities.</li>
+<li>To standardize data submission templates to ensure consistency across all reporting bodies.</li>
+<li>To enable real-time data entry through digital platforms accessible by local authorities and operators.</li>
+</ol>
+</section>
+<section id="comprehensive-national-waste-sector-baseline-studies" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="comprehensive-national-waste-sector-baseline-studies"><span class="header-section-number">6.8.2</span> Comprehensive National Waste Sector Baseline Studies</h3>
+<p>The absence of comprehensive baseline data hinders the ability to estimate emissions accurately. Conducting national baseline studies will help quantify waste generation rates, characterize waste streams and assess treatment and disposal practices across Tanzania. These studies will also provide insights into sector-specific emission factors. Proposed Approach:</p>
+<ol type="i">
+<li>To partner with academic institutions, research organizations and environmental agencies to conduct sector-wide baseline assessments.</li>
+<li>To collect data from representative regions to ensure variability between urban, peri-urban and rural areas is reflected.</li>
+<li>To focus on waste composition analysis, landfill operations and wastewater treatment facilities to develop localized emission factors.</li>
+</ol>
+</section>
+<section id="capacity-building-and-technical-training" class="level3" data-number="6.8.3">
+<h3 data-number="6.8.3" class="anchored" data-anchor-id="capacity-building-and-technical-training"><span class="header-section-number">6.8.3</span> Capacity Building and Technical Training</h3>
+<p>Enhancing the technical skills of personnel involved in waste data collection and GHG inventory preparation is essential for improving data quality. There is a need for targeted training on IPCC guidelines, data extrapolation methods and the use of inventory software. Proposed Approach:</p>
+<ol type="i">
+<li>To conduct national and regional training workshops on IPCC 2006 methodologies for waste sector emissions.</li>
+<li>To provide practical training sessions on the use of IPCC inventory tools and emissions modelling software.</li>
+<li>To establish a dedicated team within the National Environmental Management Council (NEMC) responsible for coordinating training programs and offering ongoing technical support.</li>
+</ol>
+</section>
+<section id="strengthening-institutional-coordination-and-governance" class="level3" data-number="6.8.4">
+<h3 data-number="6.8.4" class="anchored" data-anchor-id="strengthening-institutional-coordination-and-governance"><span class="header-section-number">6.8.4</span> Strengthening Institutional Coordination and Governance</h3>
+<p>Lack of clear institutional roles and responsibilities contributes to data gaps and inconsistencies. Strengthening the institutional framework by designating a lead agency to oversee data collection and inventory preparation will improve accountability and coordination. Proposed Approach:</p>
+<ol type="i">
+<li>To assign NEMC or a similar institution the responsibility for leading data collection, validation and inventory preparation.</li>
+<li>To establish a national waste emissions task force involving representatives from local governments, ministries and private sector actors.</li>
+<li>To develop inter-agency data-sharing agreements to facilitate information flow between institutions.</li>
+</ol>
+</section>
+<section id="leveraging-technology-for-data-collection-and-monitoring" class="level3" data-number="6.8.5">
+<h3 data-number="6.8.5" class="anchored" data-anchor-id="leveraging-technology-for-data-collection-and-monitoring"><span class="header-section-number">6.8.5</span> Leveraging Technology for Data Collection and Monitoring</h3>
+<p>Technological advancements offer innovative solutions to enhance data collection and emission monitoring. Remote sensing, geographic information systems (GIS) and mobile data collection platforms can bridge data gaps and ensure comprehensive coverage. Proposed Approach:</p>
+<ol type="i">
+<li>To utilize GIS to map landfill sites, track waste flows and monitor illegal dumping activities.</li>
+<li>To use drone technology and satellite imagery to estimate the size and operational status of landfill sites.</li>
+<li>To develop mobile applications for municipal and industrial operators to report waste generation, treatment and disposal activities.</li>
+</ol>
+</section>
+<section id="establishing-a-review-and-updating-framework" class="level3" data-number="6.8.6">
+<h3 data-number="6.8.6" class="anchored" data-anchor-id="establishing-a-review-and-updating-framework"><span class="header-section-number">6.8.6</span> Establishing a Review and Updating Framework</h3>
+<p>A regular review mechanism will ensure that the inventory process evolves in response to new data and emerging best practices. This will enhance transparency, accountability and the overall quality of the inventory. Proposed Approach:</p>
+<ol type="i">
+<li>To establish a timeline for reviewing and updating the waste sector inventory every one to two years.</li>
+<li>To form an advisory committee comprising experts, stakeholders and policymakers to provide guidance on inventory improvements.</li>
+<li>To publish inventory updates and progress reports thereby fostering greater public awareness and engagement in the GHG reporting process.</li>
+</ol>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-IPCC2006vol4" class="csl-entry" role="listitem">
+Climate Change (IPCC), Intergovernmental Panel on. 2006. <em>2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 4: Agriculture, Forestry, and Other Land Use</em>. Geneva, Switzerland: IPCC. <a href="https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol4.html">https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol4.html</a>.
+</div>
+<div id="ref-ipcc2006" class="csl-entry" role="listitem">
+IPCC, INTERGOVERNMENTAL PANEL ON CLIMATE CHANGE. 2006. <span>“THE IPCC.”</span> <em>Guidelines for National Greenhouse Gas Inventories, Prepared by the National Green-House Gas Inventories Programme</em>. IGES Japan.
+</div>
+<div id="ref-unece2006economic" class="csl-entry" role="listitem">
+UNECE, OF WORKING PARTIES WITHIN. 2006. <span>“Economic Commission for Europe.”</span> PhD thesis, UNITED NATIONS.
+</div>
+</div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -705,4 +1443,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/lugoa/nir25/edit/main/06_waste.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/lugoga/nirtz/edit/main/06_waste.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></div></div></footer></body></html>

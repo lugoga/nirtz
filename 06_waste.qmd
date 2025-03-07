@@ -1,12 +1,337 @@
-# WASTE
+# WASTE {#sec-waste}
+
+This chapter focuses on the waste sector, a critical component of national greenhouse gas (GHG) inventories, encompassing a range of activities that contribute to emissions through the management and treatment of waste materials. The waste sector is broadly categorized into four primary sources: solid waste disposal, biological treatment of solid waste, incineration and open burning of waste, and wastewater treatment and discharge (@tbl-waste-categories). Each of these categories represents distinct processes that generate emissions of key GHGs, including methane (CH~4~), carbon dioxide (CO~2~), and nitrous oxide (N~2~O), depending on the nature of the waste and the management practices employed.
+
+
+```{r}
+require(tidyverse)
+require(sf)
+require(patchwork)
+require(plotly)
+require(magrittr)
+require(gt)
+require(ggalluvial)
+```
+
+
+```{r}
+## Data
+ghg = read_csv('../estimates/processed/ghg_master.csv')
+
+# ghg |> distinct(ghg)
+
+waste = ghg |> 
+  ## note that the hfc is converted already
+  mutate(co2equ = case_when(
+    ghg == "co2" ~ data * 1,
+    ghg == "ch4" ~ data * 28,
+    ghg == "n2o" ~ data * 273,
+    ghg == "hfc" ~ data * 12
+    ), 
+    .after = data) |> 
+#   mutate(co2equ = data , .after = data) |> 
+  filter(sector == "WASTE")
+
+
+```
 
 ##	Sector overview
-## Methods, data sources and assumptions
+
+The **IPCC Guidelines** classify waste activities into four primary categories -- solid waste disposal; biological treatement of solid waste; incineration and open buring of waste; and wastewater treatement and discharge [@ipcc2006]. **Solid Waste Disposal** is a significant source of methane (CH₄) emissions, resulting from the anaerobic decomposition of organic matter in landfills and dumpsites. @ipcc2006 guideline differentiates between *managed landfills* -- often include gas collection and control systems, and *unmanaged or open dumps* -- lack such measures. **Biological Treatment of Solid Waste** include biological processes, such as composting and anaerobic digestion, which play a vital role in reducing waste volumes and recovering resources. However, these processes can emit CH~4~ and N~2~O.  **Incineration and Open Burning of Waste** contribute primarily to carbon dioxide (CO~2~) emissions, though incomplete combustion can also generate methane (CH~4~) and nitrous oxide (N~2~O). 
+
+**Wastewater Treatment and Discharge** emission arise primarily from the biological degradation of organic matter in domestic and industrial wastewater. Anaerobic conditions in lagoons, septic tanks, and sludge handling facilities can lead to methane (CH~4~) production, while nitrous oxide (N~2~O) is generated through nitrification and denitrification processes in wastewater treatment plants. The IPCC guideline categorizing these waste activities enable comprehensive and consistent reporting of emissions, facilitating targeted mitigation efforts and enhancing the accuracy of national GHG inventories.  However, for this inventory only category **4.A - Solid Waste Disposal** had data for estimation. The remaining were not estimated due to a lack of available data or methodological constraints (@tbl-waste-categories). As a result, the assessment in this report primarily present emissions from Solid Waste Disposal, while acknowledging the need for improved data collection and methodologies to evaluate the other categories in future inventories.
+
+```{r}
+#| label: tbl-waste-categories
+#| tbl-cap: Trends of CO~2~e emission by major categories in the waste sector
+
+
+# waste |> 
+#     filter(
+#         category %in% c('4.A - Solid Waste Disposal', '4.B - Biological Treatment of Solid Waste', '4.C - Incineration and Open Burning of Waste', '4.D - Wastewater Treatment and Discharge', '4.E - Other (please specify')
+#     ) |> 
+#     group_by(category) |> 
+#     summarise(total = sum(co2equ, na.rm = T)) |> 
+#     mutate(total = if_else(total > 0, 1, NA)) |> 
+#     gt(rowname_col = "category") |> 
+#     cols_label(
+#         total ~ md('CO~2~e (Gg)')
+#     ) |> 
+#     fmt_missing(columns = "total", missing_text = '-')
+
+
+waste |> 
+    filter(
+        category %in% c('4.A - Solid Waste Disposal', '4.B - Biological Treatment of Solid Waste', '4.C - Incineration and Open Burning of Waste', '4.D - Wastewater Treatment and Discharge', '4.E - Other (please specify')
+    ) |> 
+    group_by(category, years) |> 
+    summarise(co2equ = sum(co2equ, na.rm = TRUE)) |> 
+    ungroup() |> 
+    pivot_wider(names_from = years, values_from = co2equ) |> 
+    janitor::clean_names() |> 
+    gt(rowname_col = 'category') |> 
+    fmt_number(columns = everything(), decimals = 1) |>     
+    cols_nanoplot(
+      columns = starts_with("x"), 
+      plot_type = 'bar',
+      new_col_name = "nanoplots",
+      missing_vals = "gap",
+      new_col_label = md("Trends CO~2~ equ")
+    ) |>
+    cols_width(nanoplots ~ px(120)) |> 
+    cols_align(align = "left", columns = nanoplots) |>
+    tab_footnote(
+      footnote = "Emission from 1990 through 2021.",
+      locations = cells_column_labels(columns = nanoplots)
+    )
+
+```
+
+
+### Category 4.A.1 - Managed Waste Disposal Sites
+
+In 2021, emissions from the managed waste disposal sites category was 97 Gg CO₂e, representing a nearly ninefold increase (898%) compared to the 10 Gg CO₂e recorded in 2000 (@fig-managed). This significant rise in emissions highlights the growing impact of waste management practices on greenhouse gas (GHG) emissions over the past two decades. The increase can be attributed to several factors, including rapid urbanization, population growth, and the expansion of waste generation in tandem with economic development. While managed disposal sites are designed to mitigate environmental impacts through measures such as methane recovery and flaring, the substantial growth in emissions underscores the need for enhanced waste management strategies, including improved gas capture technologies, waste reduction initiatives, and the promotion of alternative waste treatment methods such as composting and recycling. 
+
+
+```{r}
+#| label: fig-managed
+#| fig-cap: CO~2~e emission from Managed Waste Disposal Sites
+#| fig-width: 8
+#| fig-height: 4
+
+dt = waste |>
+    filter(
+        category %in% c('4.A.1 - Managed Waste Disposal Sites')
+    ) |> 
+    filter(is.finite(co2equ))
+
+
+aa =  dt |> 
+    filter(years %in% c(2000, 2021)) |> 
+    drop_na() |> 
+    select(category, years, co2equ) |> 
+    pivot_wider(values_from = co2equ, names_from = years) |> 
+    janitor::clean_names() |> 
+    mutate(pchange = (x2021-x2000)/x2000*100 ) |>
+    mutate(across(is.numeric, round, 2)) |> 
+    mutate(
+      category = dt |> slice(1)  |> pull(category) |> 
+        str_wrap(width = 15),category = str_replace_all(category, "\n", "<br>"),
+      x2000 = scales::comma(x = x2000, big.mark = ","),
+      x2021 = scales::comma(x = x2021, big.mark = ",")     
+    )  
+
+    
+   lab_df = aa[1,] |>    
+    mutate(
+      years = 1991,  co2equ = 5.50e1,
+      lab_stats = glue::glue(
+        "**{aa[1,]$category |> str_to_upper()}**<br>
+        ------<br>
+        2000 =  {aa[1,]$x2000}Gg/year<br>
+        2021 = {aa[1,]$x2021}Gg/year<br>
+        Change = {aa[1,]$pchange }%"
+        )
+    )
+
+ 
+ dt |> 
+  drop_na() |> 
+  ggplot(aes(x = years, y = co2equ))+
+  annotate(geom = "rect", xmin = 1990, xmax = 2006, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+  ) + 
+  annotate(geom = "rect", xmin = 2004, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+  )  +
+   annotate(geom = "rect", xmin = 2013, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+  )  +    
+  geom_area(color = "steelblue2", fill = "steelblue4") + 
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6),labels = scales::label_number(big.mark = ','), limits = c(0, 1.1e2), expand = c(0,NA), name = expression(CO[2]~e~(Gg)))+
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 11) +
+  theme(axis.title.x = element_blank(), legend.position = c(.82,.85), legend.title = element_blank(), panel.grid.minor = element_blank()) +
+  # annotate(geom = "label", x = 2000, y = 22, label = "Interpolation\nFlatten Data", alpha = .5, color ='maroon', size = 8.5, lineheight = .8, family = "Barlow Semi Condensed", fontface = "plain", angle = 11.5)   +
+  ggtext::geom_richtext(
+    data = lab_df, 
+    aes(x = years, y = co2equ, label = lab_stats),    hjust = 0, vjust = 0.5, 
+    size = 3.5, lineheight = 1.2, family = "Gill Sans MT", fontface = "plain", 
+    fill = "#ffffff", color = "black", alpha = .6,
+    label.padding = unit(c(0.75, 0.5, 0.5, 0.5), "lines"),
+    show.legend = FALSE
+   )  
+```
+
+
+### Category 4.A.2 - Unmanaged Waste Disposal Sites
+
+Similar to the trend observed in managed waste disposal sites (@fig-managed), emissions from unmanaged waste disposal sites have also shown a steady increase over the inventory period (@fig-unmanaged), albeit at a significantly higher magnitude. In 2021, emissions from unmanaged waste disposal sites was 996 Gg CO~2~e, representing an increase of more than ninefold (907%) compared to the 99 Gg CO~2~e recorded in 2000 (@fig-unmanaged). This substantial rise in emissions underscores the environmental challenges posed by unmanaged waste disposal practices, which are often characterized by open dumpsites lacking gas collection or control systems. The increase can be attributed to factors such as rapid urbanization, population growth, and insufficient waste management infrastructure, which have led to higher volumes of waste being disposed of in unregulated sites. 
+
+
+
+```{r}
+#| label: fig-unmanaged
+#| fig-cap: CO~2~e emission from 4.A.2 - Unmanaged Waste Disposal Sites
+#| fig-width: 8
+#| fig-height: 4
+
+dt = waste |>
+    filter(
+        category %in% c('4.A.2 - Unmanaged Waste Disposal Sites')
+    ) |> 
+    filter(is.finite(co2equ))
+
+
+aa =  dt |> 
+    filter(years %in% c(2000, 2021)) |> 
+    drop_na() |> 
+    select(category, years, co2equ) |> 
+    pivot_wider(values_from = co2equ, names_from = years) |> 
+    janitor::clean_names() |> 
+    mutate(pchange = (x2021-x2000)/x2000*100 ) |>
+    mutate(across(is.numeric, round, 2)) |> 
+    mutate(
+      category = dt |> slice(1)  |> pull(category) |> 
+        str_wrap(width = 18),category = str_replace_all(category, "\n", "<br>"),
+      x2000 = scales::comma(x = x2000, big.mark = ","),
+      x2021 = scales::comma(x = x2021, big.mark = ",")     
+    )  
+
+    
+   lab_df = aa[1,] |>    
+    mutate(
+      years = 1991,  co2equ = 5.50e2,
+      lab_stats = glue::glue(
+        "**{aa[1,]$category |> str_to_upper()}**<br>
+        ------<br>
+        2000 =  {aa[1,]$x2000}Gg/year<br>
+        2021 = {aa[1,]$x2021}Gg/year<br>
+        Change = {aa[1,]$pchange }%"
+        )
+    )
+
+ 
+ dt |> 
+  drop_na() |> 
+  ggplot(aes(x = years, y = co2equ))+
+  annotate(geom = "rect", xmin = 1990, xmax = 2006, ymin = -Inf, ymax = Inf,fill = "cyan4", alpha = 0.2
+  ) + 
+  annotate(geom = "rect", xmin = 2004, xmax = 2015, ymin = -Inf, ymax = Inf,fill = "steelblue", alpha = 0.2
+  )  +
+   annotate(geom = "rect", xmin = 2013, xmax = 2021, ymin = -Inf, ymax = Inf,fill = "firebrick", alpha = 0.2
+  )  +    
+  geom_area(color = "steelblue2", fill = "steelblue4") + 
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 6),labels = scales::label_number(big.mark = ','), limits = c(0, 1.1e3), expand = c(0,NA), name = expression(CO[2]~e~(Gg)))+
+  scale_x_continuous(breaks = seq(1990,2020,5)) +
+  theme_minimal(base_size = 11) +
+  theme(axis.title.x = element_blank(), legend.position = c(.82,.85), legend.title = element_blank(), panel.grid.minor = element_blank()) +
+  # annotate(geom = "label", x = 2000, y = 22, label = "Interpolation\nFlatten Data", alpha = .5, color ='maroon', size = 8.5, lineheight = .8, family = "Barlow Semi Condensed", fontface = "plain", angle = 11.5)   +
+  ggtext::geom_richtext(
+    data = lab_df, 
+    aes(x = years, y = co2equ, label = lab_stats),    hjust = 0, vjust = 0.5, 
+    size = 3.5, lineheight = 1.2, family = "Gill Sans MT", fontface = "plain", 
+    fill = "#ffffff", color = "black", alpha = .6,
+    label.padding = unit(c(0.75, 0.5, 0.5, 0.5), "lines"),
+    show.legend = FALSE
+   )  
+```
+
+
+
+## Methods -- data sources and assumptions
+### Population Data
+Population data is a critical input for estimating municipal solid waste (MSW) generation, as there is a strong correlation between population size and waste production (Mapunda et al., 2023). Studies indicate that as populations grow, the volume of waste generated increases proportionally. The First Order Decay (FOD) Model, as outlined in IPCC Volume 5, Chapter 3, was used to estimate emissions from solid waste disposal sites (SWDS). This model relies on population data and per capita waste generation rates to calculate total MSW. Population data for Tanzania Mainland for the years 1957, 1967, 1978, 1988, and 1994–2021 were obtained from the National Bureau of Statistics (NBS) and the Office of the Chief Government Statistician (OCGS), sourced from national population and housing census reports and population projections. For Zanzibar, population data for 1978, 1988, 1990–2003, 2002, and 2002–2021 were collected from the OCGS through similar reports.
+
+However, there were gaps in population data for the years 1950–1956, 1958–1966, 1968–1977, 1979–1987, and 1989–1993, as population censuses are conducted every 10 years, and no projections were available for these periods. To address these gaps, missing data for 1958–1966, 1968–1977, 1979–1987, and 1989–1993 were estimated using the interpolation method described in @ipcc2006 and detailed in @sec-recalculation with mathematical formula presented in @eq-interp. Data for 1950–1956 were generated using backward extrapolation as guided in @ipcc2006. The extrapolation technique used is described in @{#sec-recalculation} with a mathematical formula in @eq-extra
+
+## Gross Domestic Product (GDP)
+The FOD model also requires GDP data and industrial waste generation rates to estimate total industrial waste. @unece2006economic described that GDP reflects societal production and consumption patterns, which influence resource use and waste generation. GDP data for 1966–1986 and 1992–2021 were obtained from NBS. However, these data had gaps with missing for 1950–1965 and 1987–1991. To address these gaps, missing GDP data for 1950–1965 were estimated using backward extrapolation, following the IPCC guideline (@ipcc2006; @IPCC2006vol4). Similarly, data for 1987–1991 were also interpolated (*See* @sec-recalculation).
+
+### Per Capita Waste Generation
+Per capita waste generation, measured in kg/capita/year, varies across regions in Tanzania. For Zanzibar, the average per capita waste generation is 4.75 kg/capita/year, while for Tanzania Mainland ranges from 0.55 kg/capita/year (2017) to 0.66–0.95 kg/capita/year (2020). The value of 0.66 kg/capita/year was selected as the representative average for Tanzania Mainland, as it reflects the waste generation patterns of the majority of the population. Available data for Tanzania Mainland and Zanzibar were limited to 2017, 2018, and 2021. To convert daily waste generation rates to annual rates, the values were multiplied by 365 days. Missing data for Tanzania Mainland (1950–2016, 2018, 2019, and 2021) and Zanzibar (1950–2017 and 2019–2021) were filled using surrogate (@eq-surro), extrapolation (@eq-extra) and interpolation (@eq-interp) techniques described in @sec-recalculation. 
+
+### Percent of Waste Disposed to Solid Waste Disposal Sites (SWDS)
+Waste disposed of in SWDS generates greenhouse gases such as methane (CH~4~), biogenic carbon dioxide (CO~2~), and non-methane volatile organic compounds (NMVOCs), as well as smaller amounts of nitrous oxide (N~2`O), nitrogen oxides (NO~x~), and carbon monoxide (CO). CH~4~ emissions from SWDS contribute approximately 3–4% of global anthropogenic GHG emissions (IPCC, 2001). Data on the percentage of waste disposed of in SWDS were available only for 2021 (Tanzania Mainland) and 2018 (Zanzibar), sourced from the National Environmental Master Plan for Strategic Interventions and the Solid Waste Management Strategy, respectively. Missing data for Tanzania Mainland (1950–2020) and Zanzibar (1950–2017 and 2019–2021) were addressed using Surrogate Method (@eq-surro) where population data were used as a surrogate to estimate the percentage of waste disposed of in SWDS for 1950–2020 (Tanzania Mainland) and 1950–2017 (Zanzibar). Data for 2019–2021 (Zanzibar) were estimated using extrapolation (@eq-extra) as guided in @ipcc2006 and @IPCC2006vol4.
+
+### Category-Specific Activity Data Inputs
+For the Solid Waste Disposal category, activity data were based on the weight of wet waste collected in 2010, sourced from the United Republic of Tanzania. The emission factor value of 0.09% was used, as specified in the 2019 Refinement to the 2006 IPCC Guidelines (@ipcc2006) Emission factors for specific waste types were also applied:
+
++ **Food Waste**: An emission factor of 57% was used, sourced from the 2019 Refinement to the 2006 IPCC Guidelines, Volume 5, Chapter 2, Pages 2.28–2.33.
++ **Paper and Cardboard**: An emission factor of 10.9% was applied, based on the same guidelines.
++ **Wood Waste**: An emission factor of 2.4% was used.
++ **Textile Waste**: An emission factor of 6.7% was applied.
++ **Metal Waste**: An emission factor of 1.9% was used.
+
+These emission factors were selected because they are IPCC default values specific to Tanzania, ensuring consistency and alignment with international reporting standards.
+
+### Category-Specific Activity Data Inputs 
+Category: Solid Waste Disposal data are based on weight of wet waste collected in 2010. The regional condition is from the United Republic of Tanzania, this value was chosen because it is IPCC default value specific for Tanzania. The emission factor value is 0.09 % with reference to 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.15-2.27.  According to IPCC solid waste emission is categorized as follows:
+
++	**Food waste:** The emission factor value of 57% was used which was sourced from the  2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it was the IPCC default value specific for Tanzania.
++	**Paper and Cardboard:** The emission factor value used was 10.9% from the 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it is IPPC default value specific for Tanzania. 
++	**Wood waste:** The emission factor value of 2.4% was used. The value was sourced from the 2019 Refinement to the 2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33. The value was chosen because it is IPCC default value specific for Tanzania.
++	**Textile waste:** The emission factor value of 6.7% was used as per the 2019 Refinement of the 2006 IPCC Guidelines for the National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33.  The value was chosen because it is IPCC default value specific for Tanzania. 
++	**Metal:** The used emission factor value was 1.9% as outlined in the 2019 Refinement to the 2006 IPCC Guidelines for the National Greenhouse Gas Inventories, Volume 5, Chapter 2, page 2.28-2.33.  The value was chosen because it is IPCC default value specific for Tanzania.
+
+
+
 ##	Quality assurance and quality control
+
+The national greenhouse gas (GHG) inventory was compiled by a team of experts drawn from various government and non-governmental institutions in Tanzania. The team was composed of wide range of expertize in the taskforcewith extensive experience in waste management and GHG inventory development. The compilation process adhered strictly to the 2006 Intergovernmental Panel on Climate Change (IPCC) Guidelines, ensuring compliance with internationally recognized methodologies and robust quality assurance and quality control (QA/QC) practices. 
+
+The data and information used to compile the inventory were sourced from a variety of reliable channels, public datasets that are found online, hard copies of reports, and expert judgments obtained through discussions with national experts. These diverse data sources were carefully reviewed and verified to ensure their accuracy, relevance, and applicability to the subject matter. To further enhance the reliability of the inventory, experts from various waste sectors applied the IPCC Good Practice Guidance, which provided a structured framework for reviewing, integrating, and harmonizing data from different sources in a consistent and accurate manner.
+
+Data and information used to compile the National Inventory Report were accessed from various source including data from online datasets, data from hard copies of reports and expert judgement information from discussions with national experts. All data were verified and reviewed to ensure its accuracy and relevance for the subject matter. 
+
+
 ##	Description of uncertainties
 ##	Time series consistency issues
 ##	Recalculations
-##	Improvements
+##	improvements measures for the Waste Sector
+The current greenhouse gas emission inventory for Tanzania’s waste sector faced significant challenges, primarily due to the unavailability of data across various sub sectors outlined in the IPCC software and inconsistencies in records for certain years. Addressing these issues is crucial for enhancing the accuracy and completeness of future inventories, ensuring Tanzania meets its reporting obligations under UNFCCC. Below are proposed measures to enhance the accuracy, reliability and completeness of the inventory.
+
+### Development of a Centralized Data Collection and Management System
+A key barrier to accurate inventories is the fragmented nature of data collection across different institutions and local governments. Establishing a centralized data management system would streamline this process by consolidating information from various waste management entities. This system would serve as a repository for data on municipal solid waste, industrial waste and wastewater thus allowing for easier access, monitoring and updates.
+Proposed Approach:
+
+i. To develop a national waste data management platform that aggregates inputs from municipal councils, private waste companies and industrial facilities.
+i. To standardize data submission templates to ensure consistency across all reporting bodies.
+i. To enable real-time data entry through digital platforms accessible by local authorities and operators.
+
+### Comprehensive National Waste Sector Baseline Studies
+The absence of comprehensive baseline data hinders the ability to estimate emissions accurately. Conducting national baseline studies will help quantify waste generation rates, characterize waste streams and assess treatment and disposal practices across Tanzania. These studies will also provide insights into sector-specific emission factors.
+Proposed Approach:
+
+i.	To partner with academic institutions, research organizations and environmental agencies to conduct sector-wide baseline assessments.
+i.	To collect data from representative regions to ensure variability between urban, peri-urban and rural areas is reflected.
+i.	To focus on waste composition analysis, landfill operations and wastewater treatment facilities to develop localized emission factors.
+
+### Capacity Building and Technical Training
+Enhancing the technical skills of personnel involved in waste data collection and GHG inventory preparation is essential for improving data quality. There is a need for targeted training on IPCC guidelines, data extrapolation methods and the use of inventory software. Proposed Approach:
+
+i.	To conduct national and regional training workshops on IPCC 2006 methodologies for waste sector emissions.
+i.	To provide practical training sessions on the use of IPCC inventory tools and emissions modelling software.
+i.	To establish a dedicated team within the National Environmental Management Council (NEMC) responsible for coordinating training programs and offering ongoing technical support.
+
+### Strengthening Institutional Coordination and Governance
+Lack of clear institutional roles and responsibilities contributes to data gaps and inconsistencies. Strengthening the institutional framework by designating a lead agency to oversee data collection and inventory preparation will improve accountability and coordination. Proposed Approach:
+
+i.	To assign NEMC or a similar institution the responsibility for leading data collection, validation and inventory preparation.
+i.	To establish a national waste emissions task force involving representatives from local governments, ministries and private sector actors.
+i.	To develop inter-agency data-sharing agreements to facilitate information flow between institutions.
+
+### Leveraging Technology for Data Collection and Monitoring
+Technological advancements offer innovative solutions to enhance data collection and emission monitoring. Remote sensing, geographic information systems (GIS) and mobile data collection platforms can bridge data gaps and ensure comprehensive coverage. Proposed Approach:
+
+i.	To utilize GIS to map landfill sites, track waste flows and monitor illegal dumping activities.
+i.	To use drone technology and satellite imagery to estimate the size and operational status of landfill sites.
+i.	To develop mobile applications for municipal and industrial operators to report waste generation, treatment and disposal activities.
+
+### Establishing a Review and Updating Framework
+A regular review mechanism will ensure that the inventory process evolves in response to new data and emerging best practices. This will enhance transparency, accountability and the overall quality of the inventory. Proposed Approach:
+
+i.	To establish a timeline for reviewing and updating the waste sector inventory every one to two years.
+i.	To form an advisory committee comprising experts, stakeholders and policymakers to provide guidance on inventory improvements.
+i.	To publish inventory updates and progress reports thereby fostering greater public awareness and engagement in the GHG reporting process.
+
 
 
 
