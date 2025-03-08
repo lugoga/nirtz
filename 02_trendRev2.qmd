@@ -1,7 +1,4 @@
-# Trends in GHG emissions and removals {#sec-trends}
-
-
-
+# Trends {#sec-trends}
 
 ```{r}
 require(tidyverse)

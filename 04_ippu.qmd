@@ -1,4 +1,4 @@
-# Industrial Process and Product Use Sector (IPPU) {#sec-ippu}
+# IPPU {#sec-ippu}
 
 
 
