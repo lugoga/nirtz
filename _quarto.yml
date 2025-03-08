@@ -3,14 +3,14 @@ project:
   output-dir: docs
 
 book:
-  cover-image: cover.png
+  cover-image: coat_OG_free_background.png
   title: "National Inventory Report"
   subtitle: "Greenhouse Gases Emission in Tanzania"
   author: "The United Republic of Tanzania"
-  date: "2025-02-26"
+  date: "2025-03-08" 
   search: true
   repo-url: https://github.com/lugoga/nirtz
-  repo-actions: [edit]
+  # repo-actions: [edit]
   downloads: [pdf, epub]
   sharing: [twitter, facebook]
   # sidebar:

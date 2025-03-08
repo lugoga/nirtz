@@ -1,61 +1,187 @@
 # Executive Summary {.unnumbered}
 
-goes here 
+This report underscores Tanzania’s commitment to meeting its international obligations under the United Nations Framework Convention on Climate Change (UNFCCC) and contributing to global climate action. By providing a transparent and accurate assessment of GHG emissions, the inventory serves as a critical tool for informing national climate policies, identifying mitigation opportunities, and tracking progress toward Tanzania’s climate goals.
+
+This National Inventory Report (NIR) presents Tanzania’s greenhouse gas (GHG) emissions and removals for the period 1990 to 2022, with a focus on the years 2010 to 2021 to reflect the country’s current economic conditions. The inventory adheres to the 2006 IPCC Guidelines and follows the Tier 1, Tier 2, and Tier 3 methodologies, depending on data availability and sector-specific requirements. The report covers emissions from key sectors, including Energy, Industrial Processes and Product Use (IPPU), Agriculture, Forestry, and Other Land Use (AFOLU), and Waste, ensuring a comprehensive assessment of Tanzania’s GHG profile.
+
+The inventory was developed through a collaborative effort led by the Vice President’s Office (VPO) – Division of Environment, with support from the National Carbon Monitoring Center (NCMC). Sector-specific data collection and analysis were conducted by Sector Working Groups, consisting experts from relevant ministries, agencies, and research institutions. The National Bureau of Statistics (NBS) played a critical role in providing and validating key data, while research institutions and academia contributed technical expertise and methodological improvements.
+
+Key findings from the inventory include:
+
+1. **Energy Sector** -- emissions from fossil fuel combustion and fugitive sources remain the largest contributor to Tanzania’s GHG emissions, driven by increasing energy demand and economic growth.
+
+1. **IPPU Sector** -- emissions from industrial processes, such as cement production, are relatively low but are expected to grow with industrial expansion.
+
+1. **AFOLU Sector** -- emissions from agriculture and land-use changes, particularly deforestation, are significant, while removals from afforestation and reforestation efforts are gradually increasing.
+
+1. **Waste Sector** -- emissions from solid waste disposal and wastewater treatment are rising due to urbanization and population growth, highlighting the need for improved waste management practices.
+
+The inventory also highlights the challenges of data collection in a data-scarce environment, particularly for sectors like waste and agriculture. To address these challenges, Tanzania has implemented capacity-building programs and strengthened its institutional framework for GHG reporting. The authorization of the NCMC marks a significant step forward in enhancing Tanzania’s carbon monitoring and verification capabilities.
+
+## Acknowledgement {.unnumbered}
+
+The successful completion of this  National Inventory Report (NIR) would not have been possible without the collaborative efforts and contributions of numerous individuals, institutions, and stakeholders. We extend our sincere gratitude to all those who played a role in this important endeavor. First and foremost, we acknowledge the leadership and support of the Vice President’s Office (VPO) – Division of Environment, which provided the overall coordination and policy guidance necessary for this work. The the National Carbon Monitoring Center (NCMC) has been instrumental in enhancing Tanzania’s capacity for carbon monitoring and climate change reporting.
+
+We are deeply grateful to the Sector Working Groups for their dedication and expertise in collecting and analyzing data across key sectors, including Energy, Industrial Processes and Product Use (IPPU), Waste, Agriculture, and Forestry and Other Land Use (FOLU). Their efforts ensured the accuracy and comprehensiveness of the inventory. Special thanks go to the National Bureau of Statistics (NBS) for providing critical statistical data and validating the activity data used in this report. The collaboration with Research Institutions and Academia was invaluable in developing country-specific emission factors and advancing methodological improvements.
+
+We also recognize the pivotal role of NCMC in overseeing the inventory process, implementing capacity-building programs, and ensuring the timely completion of this report. Their commitment to quality assurance and quality control (QA/QC) has significantly enhanced the reliability of the inventory. The support of the Capacity Building Programs and the robust Legal and Policy Frameworks provided the foundation for this work, enabling Tanzania to meet its international obligations under the United Nations Framework Convention on Climate Change (UNFCCC).
+
+Finally, we extend our appreciation to all government departments, public entities, and stakeholders who contributed data, insights, and expertise to this process. Your collective efforts have made it possible to produce a transparent, accurate, and credible GHG inventory that will support Tanzania’s climate action goals and contribute to global efforts to address climate change.
 
 
 # Technical contributors {.unumbered}
 
-## Coordinators {.unumbered}
-1.	Eng. Cyprian John Luhemeja (**Permanent Secretary, Vice President’s Office**)
-2.	Dr. Freddy Manyika (Division of Environment, Vice President’s Office)
-3.	Eng. Juma Limbe (Division of Environment, Vice President’s Office)
-4.	Prof. Eliakimu Zahabu (Coordinator, National Carbon Monitoring Centre)
-5.	Dr. Deo Shirima (Senior Safeguard Information System Officer, National Carbon Monitoring Centre)
-6.	Dr. Paulo Lyimo (Biodiversity Conservationist, National Carbon Monitoring Centre)
 
-## Energy Sector {.unumbered}
-1.	Dr. Sara Osima (Tanzania Meteorological Authority)
-2.	Dr. Neema Kitasho (Sokoine University of Agriculture)
-3.	Dr. Esebi Nyari (Dar es Saalam Institute of Technology)
-4.	Ms. Maryrose Batenga (Climate Action Network Tanzania)
-5.	Ms. Elizabeth Philipo (Ministry of Energy)
-6.	Mr. Jonathan Bruno (Ministry of Energy)
+```{r}
+pacman::p_load(tidyverse, gt)
 
-## Industrial Processes and Product Use (IPPU) {.unumbered}
-
-1.	Dr. Christopher Warbug (Sokoine University of Agriculture)
-2.	Mr. Maliki A. Maliki (Vice President’s Office)
-3.	Ms. Sarafina Masanja (Sokoine University of Agriculture)
-4.	Eng. Cyril Kimario (Tanzania Bureau of Standards)
-5.	Dr. Zainabu Katima (University of Dar es Saalam)
-6.	Mr. Hamdu Hamdani (Zanzibar Environmental Management Authority)
-7.	Mr. Mathias Chanila (Tanzania Revenue Authority)
-
-## AFOLU sector {.unumbered}
-
-1.	Mr. Deogratius Gambago (Ministry of Fisheries and Livestock)
-2.	Dr. Zabron Nziku (Tanzania Livestock Research Institute)
-3.	Dr. Elikana John (Tanzania Forest Service Agency)
-4.	Dr. Masumbuko Semba (Nelson Mandela African Institution of Science and Technology)
-5.	Dr. Issa Nyashilu (Vice President’s Office)
-6.	Mr. Fikiri Mhenga (Sokoine University of Agriculture)
-7.	Mr. Abdallah Lungo (Vice President’s Office)
-8.	Mr. Melkizedeck Dunda (Sokoine University of Agriculture)
-9.	Mr. Kamwesige Mtendei (Ministry of Agriculture and Irrigation)
-10.	Mrs. Miza Suleiman (Ministry of Agriculture, Irrigation, Natural Resource and Livestock)
-11.	Mr. Abbas Mzee (Ministry of Agriculture, Irrigation, Natural Resource and Livestock)
-12.	Mr. Japhet Safiel (Sokoine University of Agriculture)
-13.	Mr. Frank Mathias (Sokoine University of Agriculture)
-
-## Waste sector {.unumbered}
-
-1.	Mr. Joseph Qamara (Climate Action Network Tanzania)
-2.	Mr. Mohamed Suleiman (Central Town Council)
-3.	Mr. Rogassian Lukoa (President’s Office, Regional Administration and Local Government)
-4.	Ms. Diana Tesha (Sokoine University of Agriculture)
-5.	Mr. Julius Enock (Vice President’s Office)
+```
 
 
+```{r}
+
+# Coordinators
+coordinators <- data.frame(
+  Name = c("Eng. Cyprian John Luhemeja", "Dr. Freddy Manyika", "Eng. Juma Limbe", 
+           "Prof. Eliakimu Zahabu", "Dr. Deo Shirima", "Dr. Paulo Lyimo"),
+  Role = c("Permanent Secretary, Vice President’s Office", 
+           "Division of Environment, Vice President’s Office", 
+           "Division of Environment, Vice President’s Office", 
+           "Coordinator, National Carbon Monitoring Centre", 
+           "Senior Safeguard Information System Officer, National Carbon Monitoring Centre", 
+           "Biodiversity Conservationist, National Carbon Monitoring Centre")
+)
+
+
+coordinators %>%
+  gt() %>%
+  tab_header(title = "Coordinators") %>%
+  cols_label(Name = "Name", Role = "Role") %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#f9f9f9"),
+    locations = cells_body()
+  ) |> 
+    tab_header(title = "Coordinators") %>%
+  tab_source_note("The Coordinators provided strategic oversight and leadership for the GHG inventory process. Their guidance ensured alignment with national and international climate goals.")
+```
+
+
+```{r}
+
+# Energy Sector
+energy_sector <- data.frame(
+  Name = c("Dr. Sara Osima", "Dr. Neema Kitasho", "Dr. Esebi Nyari", 
+           "Ms. Maryrose Batenga", "Ms. Elizabeth Philipo", "Mr. Jonathan Bruno"),
+  Affiliation = c("Tanzania Meteorological Authority", "Sokoine University of Agriculture", 
+                  "Dar es Salaam Institute of Technology", "Climate Action Network Tanzania", 
+                  "Ministry of Energy", "Ministry of Energy")
+)
+energy_sector %>%
+  gt() %>%
+  tab_header(title = "Energy Sector") %>%
+  cols_label(Name = "Name", Affiliation = "Affiliation") %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#f9f9f9"),
+    locations = cells_body()
+  ) %>%
+  tab_source_note("The Energy Sector team contributed data and expertise on emissions from fossil fuel combustion and energy production. Their work ensured accurate reporting of Tanzania’s energy-related emissions.") 
+```
+
+```{r}
+
+
+# Industrial Processes and Product Use (IPPU)
+ippu_sector <- data.frame(
+  Name = c("Dr. Christopher Warbug", "Mr. Maliki A. Maliki", "Ms. Sarafina Masanja", 
+           "Eng. Cyril Kimario", "Dr. Zainabu Katima", "Mr. Hamdu Hamdani", 
+           "Mr. Mathias Chanila"),
+  Affiliation = c("Sokoine University of Agriculture", "Vice President’s Office", 
+                  "Sokoine University of Agriculture", "Tanzania Bureau of Standards", 
+                  "University of Dar es Salaam", "Zanzibar Environmental Management Authority", 
+                  "Tanzania Revenue Authority")
+)
+
+ippu_sector %>%
+  gt() %>%
+  tab_header(title = "Industrial Processes and Product Use (IPPU)") |> 
+  cols_label(Name = "Name", Affiliation = "Affiliation") %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#f9f9f9"),
+    locations = cells_body()
+  )%>%
+  tab_source_note("The IPPU team focused on emissions from industrial processes and product use. Their efforts included data collection and analysis for cement production, chemicals, and solvents.") 
+```
+
+```{r}
+# AFOLU Sector
+afolu_sector <- data.frame(
+  Name = c("Mr. Deogratius Gambago", "Dr. Zabron Nziku", "Dr. Elikana John", 
+           "Dr. Masumbuko Semba", "Dr. Issa Nyashilu", "Mr. Fikiri Mhenga", 
+           "Mr. Abdallah Lungo", "Mr. Melkizedeck Dunda", "Mr. Kamwesige Mtendei", 
+           "Mrs. Miza Suleiman", "Mr. Abbas Mzee", "Mr. Japhet Safiel", 
+           "Mr. Frank Mathias"),
+  Affiliation = c("Ministry of Fisheries and Livestock", "Tanzania Livestock Research Institute", 
+                  "Tanzania Forest Service Agency", "Nelson Mandela African Institution of Science and Technology", 
+                  "Vice President’s Office", "Sokoine University of Agriculture", 
+                  "Vice President’s Office", "Sokoine University of Agriculture", 
+                  "Ministry of Agriculture and Irrigation", "Ministry of Agriculture, Irrigation, Natural Resource and Livestock", 
+                  "Ministry of Agriculture, Irrigation, Natural Resource and Livestock", 
+                  "Sokoine University of Agriculture", "Sokoine University of Agriculture")
+)
+
+
+afolu_sector %>%
+  gt() %>%
+  tab_header(title = "AFOLU Sector") %>%
+  cols_label(Name = "Name", Affiliation = "Affiliation") %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#f9f9f9"),
+    locations = cells_body()
+  )%>%
+  tab_source_note("The AFOLU team addressed emissions and removals from agriculture, forestry, and land use. Their work included data on livestock, crops, deforestation, and afforestation.")
+```
+
+```{r}
+# Waste Sector
+waste_sector <- data.frame(
+  Name = c("Mr. Joseph Qamara", "Mr. Mohamed Suleiman", "Mr. Rogassian Lukoa", 
+           "Ms. Diana Tesha", "Mr. Julius Enock"),
+  Affiliation = c("Climate Action Network Tanzania", "Central Town Council", 
+                  "President’s Office, Regional Administration and Local Government", 
+                  "Sokoine University of Agriculture", "Vice President’s Office")
+)
+
+waste_sector %>%
+  gt() %>%
+  tab_header(title = "Waste Sector") %>%
+  cols_label(Name = "Name", Affiliation = "Affiliation") %>%
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = cells_column_labels()
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "#f9f9f9"),
+    locations = cells_body()
+  )%>%
+  tab_source_note("The Waste Sector team focused on emissions from solid waste disposal and wastewater treatment. Their contributions ensured accurate reporting of methane and other emissions from waste management.") 
+
+```
 # Introduction {.unnumbered}
 
 # ES 2 Summary of national GHG emission and removal estimates and trend {.unnumbered}
