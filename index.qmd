@@ -1,4 +1,4 @@
-# Executive Summary {.unnumbered}
+# Executive Summary {.unnumbered} {.title-block}
 
 This is the National Inventory Report (NIR) of the United Republic of Tanzania for 2024, submitted to the United Nations Framework Convention on Climate Change (UNFCCC) as part of its reporting obligations. The NIR contains national greenhouse gas emission inventory estimates for the period 1990–2021, compiled under the UNFCCC rules for reporting. This report and the associated tables are submitted to fulfil Tanzania’s obligations under the enhanced national communication reporting requirements (Article 12, paragraph 1(a) of the Convention, and decisions 1/CP.16 para 60(a–b)). The NIR also supports compliance with the reporting requirements in the preparation of Tanzania's first biennial update report (BUR) consistent with decision 1/CP.16 para 60(c). This is the second time Tanzania has prepared its NIR, but the first submission under the "BUR" reporting mechanism. 
 

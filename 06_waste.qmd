@@ -83,7 +83,7 @@ waste |>
     tab_footnote(
       footnote = "Emission from 1990 through 2021.",
       locations = cells_column_labels(columns = nanoplots)
-    )
+    ) 
 
 ```
 

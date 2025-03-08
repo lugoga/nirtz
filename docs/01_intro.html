@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Introduction – National Inventory Report</title>
+<title>2&nbsp; Introduction – National Inventory Report</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,7 +20,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -68,6 +88,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 <link rel="stylesheet" href="style.css">
@@ -82,7 +105,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_intro.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01_intro.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -147,55 +170,55 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Executive Summary</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Executive Summary {.unnumbered}</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01_intro.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02_trendRev2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Trends in GHG emissions and removals</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Trends in GHG emissions and removals</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03_energy.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">ENERGY</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">ENERGY</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04_ippu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Industrial Process and Product Use Sector (IPPU)</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Industrial Process and Product Use Sector (IPPU)</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./05_afolu.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">AFOLU</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">AFOLU</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06_waste.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">WASTE</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">WASTE</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07_others.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">OTHERS</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">OTHERS</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./08_recac.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">RECALCULATIONS</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">RECALCULATIONS</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -214,30 +237,30 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#outline-of-the-national-inventory-report" id="toc-outline-of-the-national-inventory-report" class="nav-link active" data-scroll-target="#outline-of-the-national-inventory-report"><span class="header-section-number">1.1</span> Outline of the National Inventory Report</a></li>
-  <li><a href="#scope-of-the-ghg-inventory" id="toc-scope-of-the-ghg-inventory" class="nav-link" data-scroll-target="#scope-of-the-ghg-inventory"><span class="header-section-number">1.2</span> Scope of the GHG Inventory</a></li>
-  <li><a href="#institutional-arrangements" id="toc-institutional-arrangements" class="nav-link" data-scroll-target="#institutional-arrangements"><span class="header-section-number">1.3</span> Institutional Arrangements</a>
+  <li><a href="#outline-of-the-national-inventory-report" id="toc-outline-of-the-national-inventory-report" class="nav-link active" data-scroll-target="#outline-of-the-national-inventory-report"><span class="header-section-number">2.1</span> Outline of the National Inventory Report</a></li>
+  <li><a href="#scope-of-the-ghg-inventory" id="toc-scope-of-the-ghg-inventory" class="nav-link" data-scroll-target="#scope-of-the-ghg-inventory"><span class="header-section-number">2.2</span> Scope of the GHG Inventory</a></li>
+  <li><a href="#institutional-arrangements" id="toc-institutional-arrangements" class="nav-link" data-scroll-target="#institutional-arrangements"><span class="header-section-number">2.3</span> Institutional Arrangements</a>
   <ul class="collapse">
-  <li><a href="#institutional-legal-and-procedural-arrangements-for-compiling-the-inventory" id="toc-institutional-legal-and-procedural-arrangements-for-compiling-the-inventory" class="nav-link" data-scroll-target="#institutional-legal-and-procedural-arrangements-for-compiling-the-inventory"><span class="header-section-number">1.3.1</span> Institutional, Legal and Procedural Arrangements for compiling the inventory</a></li>
-  <li><a href="#roles-and-responsibilities-of-government-bodies-and-organisations" id="toc-roles-and-responsibilities-of-government-bodies-and-organisations" class="nav-link" data-scroll-target="#roles-and-responsibilities-of-government-bodies-and-organisations"><span class="header-section-number">1.3.2</span> Roles and Responsibilities of Government bodies and organisations</a></li>
-  <li><a href="#data-collection-processing-and-storage" id="toc-data-collection-processing-and-storage" class="nav-link" data-scroll-target="#data-collection-processing-and-storage"><span class="header-section-number">1.3.3</span> Data collection, processing and storage</a></li>
-  <li><a href="#information-on-changes-to-the-national-institutional-arrangements" id="toc-information-on-changes-to-the-national-institutional-arrangements" class="nav-link" data-scroll-target="#information-on-changes-to-the-national-institutional-arrangements"><span class="header-section-number">1.3.4</span> Information on Changes to the National Institutional Arrangements</a></li>
+  <li><a href="#institutional-legal-and-procedural-arrangements-for-compiling-the-inventory" id="toc-institutional-legal-and-procedural-arrangements-for-compiling-the-inventory" class="nav-link" data-scroll-target="#institutional-legal-and-procedural-arrangements-for-compiling-the-inventory"><span class="header-section-number">2.3.1</span> Institutional, Legal and Procedural Arrangements for compiling the inventory</a></li>
+  <li><a href="#roles-and-responsibilities-of-government-bodies-and-organisations" id="toc-roles-and-responsibilities-of-government-bodies-and-organisations" class="nav-link" data-scroll-target="#roles-and-responsibilities-of-government-bodies-and-organisations"><span class="header-section-number">2.3.2</span> Roles and Responsibilities of Government bodies and organisations</a></li>
+  <li><a href="#data-collection-processing-and-storage" id="toc-data-collection-processing-and-storage" class="nav-link" data-scroll-target="#data-collection-processing-and-storage"><span class="header-section-number">2.3.3</span> Data collection, processing and storage</a></li>
+  <li><a href="#information-on-changes-to-the-national-institutional-arrangements" id="toc-information-on-changes-to-the-national-institutional-arrangements" class="nav-link" data-scroll-target="#information-on-changes-to-the-national-institutional-arrangements"><span class="header-section-number">2.3.4</span> Information on Changes to the National Institutional Arrangements</a></li>
   </ul></li>
-  <li><a href="#key-categories" id="toc-key-categories" class="nav-link" data-scroll-target="#key-categories"><span class="header-section-number">1.4</span> Key Categories</a></li>
-  <li><a href="#quality-assurance-and-quality-control-qaqc" id="toc-quality-assurance-and-quality-control-qaqc" class="nav-link" data-scroll-target="#quality-assurance-and-quality-control-qaqc"><span class="header-section-number">1.5</span> Quality assurance and quality control (QA/QC)</a></li>
-  <li><a href="#uncertainty-analysis" id="toc-uncertainty-analysis" class="nav-link" data-scroll-target="#uncertainty-analysis"><span class="header-section-number">1.6</span> Uncertainty Analysis</a></li>
-  <li><a href="#overview-of-completeness-recalculations-and-improvements" id="toc-overview-of-completeness-recalculations-and-improvements" class="nav-link" data-scroll-target="#overview-of-completeness-recalculations-and-improvements"><span class="header-section-number">1.7</span> Overview of Completeness, Recalculations, and Improvements</a>
+  <li><a href="#key-categories" id="toc-key-categories" class="nav-link" data-scroll-target="#key-categories"><span class="header-section-number">2.4</span> Key Categories</a></li>
+  <li><a href="#quality-assurance-and-quality-control-qaqc" id="toc-quality-assurance-and-quality-control-qaqc" class="nav-link" data-scroll-target="#quality-assurance-and-quality-control-qaqc"><span class="header-section-number">2.5</span> Quality assurance and quality control (QA/QC)</a></li>
+  <li><a href="#uncertainty-analysis" id="toc-uncertainty-analysis" class="nav-link" data-scroll-target="#uncertainty-analysis"><span class="header-section-number">2.6</span> Uncertainty Analysis</a></li>
+  <li><a href="#overview-of-completeness-recalculations-and-improvements" id="toc-overview-of-completeness-recalculations-and-improvements" class="nav-link" data-scroll-target="#overview-of-completeness-recalculations-and-improvements"><span class="header-section-number">2.7</span> Overview of Completeness, Recalculations, and Improvements</a>
   <ul class="collapse">
-  <li><a href="#completeness" id="toc-completeness" class="nav-link" data-scroll-target="#completeness"><span class="header-section-number">1.7.1</span> Completeness</a></li>
-  <li><a href="#recalculations" id="toc-recalculations" class="nav-link" data-scroll-target="#recalculations"><span class="header-section-number">1.7.2</span> Recalculations</a></li>
-  <li><a href="#improvements" id="toc-improvements" class="nav-link" data-scroll-target="#improvements"><span class="header-section-number">1.7.3</span> Improvements</a></li>
+  <li><a href="#completeness" id="toc-completeness" class="nav-link" data-scroll-target="#completeness"><span class="header-section-number">2.7.1</span> Completeness</a></li>
+  <li><a href="#recalculations" id="toc-recalculations" class="nav-link" data-scroll-target="#recalculations"><span class="header-section-number">2.7.2</span> Recalculations</a></li>
+  <li><a href="#improvements" id="toc-improvements" class="nav-link" data-scroll-target="#improvements"><span class="header-section-number">2.7.3</span> Improvements</a></li>
   </ul></li>
-  <li><a href="#background-information" id="toc-background-information" class="nav-link" data-scroll-target="#background-information"><span class="header-section-number">1.8</span> Background information</a>
+  <li><a href="#background-information" id="toc-background-information" class="nav-link" data-scroll-target="#background-information"><span class="header-section-number">2.8</span> Background information</a>
   <ul class="collapse">
-  <li><a href="#climate-change" id="toc-climate-change" class="nav-link" data-scroll-target="#climate-change"><span class="header-section-number">1.8.1</span> Climate Change</a></li>
-  <li><a href="#ghg-inventory" id="toc-ghg-inventory" class="nav-link" data-scroll-target="#ghg-inventory"><span class="header-section-number">1.8.2</span> GHG Inventory</a></li>
+  <li><a href="#climate-change" id="toc-climate-change" class="nav-link" data-scroll-target="#climate-change"><span class="header-section-number">2.8.1</span> Climate Change</a></li>
+  <li><a href="#ghg-inventory" id="toc-ghg-inventory" class="nav-link" data-scroll-target="#ghg-inventory"><span class="header-section-number">2.8.2</span> GHG Inventory</a></li>
   </ul></li>
-  <li><a href="#overview-of-completeness" id="toc-overview-of-completeness" class="nav-link" data-scroll-target="#overview-of-completeness"><span class="header-section-number">1.9</span> Overview of Completeness</a></li>
+  <li><a href="#overview-of-completeness" id="toc-overview-of-completeness" class="nav-link" data-scroll-target="#overview-of-completeness"><span class="header-section-number">2.9</span> Overview of Completeness</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/lugoga/nirtz/edit/main/01_intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li></ul></div></nav>
     </div>
@@ -246,7 +269,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></h1>
 </div>
 
 
@@ -263,61 +286,674 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="outline-of-the-national-inventory-report" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="outline-of-the-national-inventory-report"><span class="header-section-number">1.1</span> Outline of the National Inventory Report</h2>
+<p>This is Tanzania’s National Inventory Report (NIR) covering the period from 1990 to 2021. The inventory accounts for greenhouse gas (GHG) emissions arising from anthropogenic activities, with a primary focus on direct GHGs, including carbon dioxide (CO<sub>2</sub>), methane (CH<sub>4</sub>), nitrous oxide (N~2`O), and perfluorocarbons (PFCs), as well as their removal by sinks. Emissions for each gas are quantified in terms of carbon dioxide equivalent (CO<sub>2</sub>e), using the 100-year global warming potentials (GWPs) as specified in the 1995 IPCC Second Assessment Report (<span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span>).</p>
+<p>The base year for the analysis is set at 2000, providing a consistent reference point for tracking emissions trends over time. However, the emissions analysis places particular emphasis on changes observed between 2010 and 2021 to better reflect Tanzania’s current economic conditions and recent developments. This approach ensures that the inventory captures the most relevant and up-to-date trends, offering a more accurate representation of the country’s greenhouse gas emissions profile in the context of its evolving socio-economic landscape</p>
+<section id="outline-of-the-national-inventory-report" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="outline-of-the-national-inventory-report"><span class="header-section-number">2.1</span> Outline of the National Inventory Report</h2>
+<p>The National Inventory Report (NIR) is organized into eight chapters to deliver a thorough and transparent overview of Tanzania’s greenhouse gas (GHG) emissions and removals. It opens with an <strong>Executive Summary</strong> that presents a high-level summary of key findings, such as total emissions, main sources, and trends spanning the reporting period (1990–2022). Following this is the <strong>Introduction chapter</strong>, which describes the purpose, scope, and institutional framework of the inventory, along with Tanzania’s obligations under international climate agreements.</p>
+<p>The <strong>Trends chapter</strong> in GHG Emissions and Removals chapter provides an in-depth analysis of emission trends, detailing data by gas and sector, and elucidating the factors contributing to observed patterns. The main body of the report emphasizes sector-specific emissions, beginning with the <strong>Energy sector chapter</strong>, which includes emissions from fossil fuel combustion and fugitive sources. The <strong>Industrial Processes and Product Use (IPPU) chapter</strong> tackles emissions from cement manufacturing, chemical production, and the usage of solvents and refrigerants. The <strong>Agriculture, Forestry, and Other Land Use (AFOLU) chapter</strong> investigates emissions and removals resulting from agricultural practices, forestry, and changes in land use, while the <strong>Waste chapter</strong> focus on emissions linked to solid waste disposal, wastewater management, and incineration.</p>
+<p>An <strong>Others chapter</strong> accounts for additional sources not addressed in the primary sectors, ensuring the inventory is complete. The report wraps up with the Recalculations chapter, detailing adjustments to previous estimates due to updated methodologies, data, or emission factors. It emphasizes the effects of these modifications on emission trends and sectoral contributions. The References section then enumerates all data sources, methodologies, and cited literature, promoting transparency and reproducibility. Collectively, these chapters furnish a comprehensive and detailed account of Tanzania’s GHG emissions, aiding informed decision-making and climate action.</p>
 </section>
-<section id="scope-of-the-ghg-inventory" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="scope-of-the-ghg-inventory"><span class="header-section-number">1.2</span> Scope of the GHG Inventory</h2>
+<section id="scope-of-the-ghg-inventory" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="scope-of-the-ghg-inventory"><span class="header-section-number">2.2</span> Scope of the GHG Inventory</h2>
+<p>The inventory presents a thorough evaluation of Tanzania’s national emissions and removals, covering the entire territory of the United Republic of Tanzania, including both mainland Tanzania and Zanzibar. This inventory includes emissions from all major sectors – Energy, Industrial Processes and Product Use (IPPU), Agriculture, Forestry, and Other Land Use (AFOLU), and Waste, ensuring a comprehensive assessment of human activities. It specifically targets direct GHGs like carbon dioxide (CO<sub>2</sub>), methane (CH<sub>4</sub>), nitrous oxide (N<sub>2</sub>O), and perfluorocarbons (PFCs), along with their absorption by sinks.</p>
+<p>Emissions are expressed in terms of carbon dioxide equivalent (CO<sub>2</sub>e), based on the 100-year global warming potentials (GWPs) from the 1995 IPCC Second Assessment Report (<span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span>). The estimation of emissions employs a mix of Tier 1, Tier 2, and Tier 3 methodologies as specified in the 2006 IPCC Guidelines (<span class="citation" data-cites="ipcc2006">IPCC (<a href="references.html#ref-ipcc2006" role="doc-biblioref">2006</a>)</span>; <span class="citation" data-cites="IPCC2006vol4">Climate Change (IPCC) (<a href="references.html#ref-IPCC2006vol4" role="doc-biblioref">2006</a>)</span>). Where country-specific data is sparse, Tier 1 methods relying on default emission factors were employed, while Tier 2 and Tier 3 methods that incorporate more detailed activity data and country-specific emission factors were used when possible to improve precision. The inventory spans the years from 1990 to 2022, with 2000 as the reference year for trend and level analysis.</p>
 </section>
-<section id="institutional-arrangements" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="institutional-arrangements"><span class="header-section-number">1.3</span> Institutional Arrangements</h2>
-<section id="institutional-legal-and-procedural-arrangements-for-compiling-the-inventory" class="level3" data-number="1.3.1">
-<h3 data-number="1.3.1" class="anchored" data-anchor-id="institutional-legal-and-procedural-arrangements-for-compiling-the-inventory"><span class="header-section-number">1.3.1</span> Institutional, Legal and Procedural Arrangements for compiling the inventory</h3>
+<section id="institutional-arrangements" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="institutional-arrangements"><span class="header-section-number">2.3</span> Institutional Arrangements</h2>
+<section id="institutional-legal-and-procedural-arrangements-for-compiling-the-inventory" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="institutional-legal-and-procedural-arrangements-for-compiling-the-inventory"><span class="header-section-number">2.3.1</span> Institutional, Legal and Procedural Arrangements for compiling the inventory</h3>
+<p>The <strong>Environmental Management Act</strong> (Cap. 191) and related climate change policies provide the legal framework for Tanzania to meet its international obligations under the United Nations Framework Convention on Climate Change (UNFCCC). These regulations require government departments and public entities to report on greenhouse gas (GHG) emissions for the national inventory. The <strong>Vice President’s Office (VPO)</strong>, through its <strong>Division of Environment</strong>, is the designated national entity responsible for the overall development, compilation, and submission of the GHG inventory to the UNFCCC. Specifically, the Climate Change Directorate (NCMC) under the VPO coordinates the implementation of climate change activities in Tanzania, including the preparation of GHG inventories.</p>
+<p>The National Inventory Report (NIR) for Tanzania’s Third National Communication (TNC) and Biennial Update Reports (BURs) has been developed through collaboration among inter-ministerial and inter-institutional sector teams. The Project Manager, who also serves as the GHG Inventory Coordinator, worked closely with Sector Coordinators and sector teams to collect data, estimate emissions, and draft the inventory report. To support the preparation of the GHG inventory, five Sector Working Groups were established under the Technical Working Group on Greenhouse Gas Inventory. These groups include:</p>
+<ol type="1">
+<li>Energy (including Transport) Sector Working Group</li>
+<li>Industrial Processes and Product Use (IPPU) Sector Working Group</li>
+<li>Waste Sector Working Group</li>
+<li>Agriculture (Crop and Livestock) Sector Working Group</li>
+<li>Forestry and Other Land Use (FOLU) Sector Working Group</li>
+</ol>
+<p>The GHG coordinator (GHC) engaged technical experts and institutions to provide guidance and worked closely with sector teams to develop systems and procedures for efficient GHG inventory preparation. While Tanzania has envisioned a formal GHG Inventory Institutional Framework, it is yet to be fully operationalized. Until then, the GHC serves as the National GHG Inventory Coordination Unit, with the Project Manager acting as the GHG Inventory Coordinator. Each Sector Working Group is led by a Sector Coordinator, appointed by the Project Manager in consultation with the respective sector teams.</p>
 </section>
-<section id="roles-and-responsibilities-of-government-bodies-and-organisations" class="level3" data-number="1.3.2">
-<h3 data-number="1.3.2" class="anchored" data-anchor-id="roles-and-responsibilities-of-government-bodies-and-organisations"><span class="header-section-number">1.3.2</span> Roles and Responsibilities of Government bodies and organisations</h3>
+<section id="roles-and-responsibilities-of-government-bodies-and-organisations" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="roles-and-responsibilities-of-government-bodies-and-organisations"><span class="header-section-number">2.3.2</span> Roles and Responsibilities of Government bodies and organisations</h3>
+<p>The preparation of Tanzania’s Greenhouse Gas (GHG) Inventory involves a coordinated effort among various government bodies and organizations, each with specific roles and responsibilities to ensure the accuracy, completeness, and transparency of the inventory. The key entities and their responsibilities are outlined in <a href="#tbl-roles" class="quarto-xref">Table&nbsp;<span>2.1</span></a>.</p>
+<div class="cell">
+<div id="tbl-roles" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-roles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: Government bodies and organizations with specific roles for prepration of the national inventory report
+</figcaption>
+<div aria-describedby="tbl-roles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="cecqbfpgfs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cecqbfpgfs table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#cecqbfpgfs thead, #cecqbfpgfs tbody, #cecqbfpgfs tfoot, #cecqbfpgfs tr, #cecqbfpgfs td, #cecqbfpgfs th {
+  border-style: none;
+}
+
+#cecqbfpgfs p {
+  margin: 0;
+  padding: 0;
+}
+
+#cecqbfpgfs .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#cecqbfpgfs .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#cecqbfpgfs .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#cecqbfpgfs .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#cecqbfpgfs .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#cecqbfpgfs .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#cecqbfpgfs .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#cecqbfpgfs .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#cecqbfpgfs .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#cecqbfpgfs .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#cecqbfpgfs .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#cecqbfpgfs .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#cecqbfpgfs .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#cecqbfpgfs .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#cecqbfpgfs .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cecqbfpgfs .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#cecqbfpgfs .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#cecqbfpgfs .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#cecqbfpgfs .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cecqbfpgfs .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#cecqbfpgfs .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cecqbfpgfs .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#cecqbfpgfs .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cecqbfpgfs .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#cecqbfpgfs .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#cecqbfpgfs .gt_left {
+  text-align: left;
+}
+
+#cecqbfpgfs .gt_center {
+  text-align: center;
+}
+
+#cecqbfpgfs .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#cecqbfpgfs .gt_font_normal {
+  font-weight: normal;
+}
+
+#cecqbfpgfs .gt_font_bold {
+  font-weight: bold;
+}
+
+#cecqbfpgfs .gt_font_italic {
+  font-style: italic;
+}
+
+#cecqbfpgfs .gt_super {
+  font-size: 65%;
+}
+
+#cecqbfpgfs .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#cecqbfpgfs .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#cecqbfpgfs .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#cecqbfpgfs .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#cecqbfpgfs .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#cecqbfpgfs .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#cecqbfpgfs .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#cecqbfpgfs .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#cecqbfpgfs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Entity" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Entity</th>
+<th id="Role" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Role</th>
+<th id="Responsibilities" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Responsibilities</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Entity">Vice President’s Office (VPO) – Division of Environment</td>
+<td class="gt_row gt_left" headers="Role">Overall coordination, policy oversight, and resource mobilization</td>
+<td class="gt_row gt_left" headers="Responsibilities">Develop, compile, and submit the GHG inventory; ensure alignment with policies and international requirements</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Entity">National Carbon Monitoring Center (NCMC)</td>
+<td class="gt_row gt_left" headers="Role">Technical coordination, capacity building, and stakeholder engagement</td>
+<td class="gt_row gt_left" headers="Responsibilities">Coordinate climate change activities; provide technical oversight and training</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Entity">Sector Working Groups</td>
+<td class="gt_row gt_left" headers="Role">Data collection, emission estimation, and quality assurance/quality control (QA/QC)</td>
+<td class="gt_row gt_left" headers="Responsibilities">Collect and analyze sector-specific data; estimate emissions; implement QA/QC procedures</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Entity">National Bureau of Statistics (NBS)</td>
+<td class="gt_row gt_left" headers="Role">Provision and validation of statistical data</td>
+<td class="gt_row gt_left" headers="Responsibilities">Provide population, economic, and sector-specific data; validate data accuracy</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Entity">Ministry of Energy</td>
+<td class="gt_row gt_left" headers="Role">Provision of energy sector data and fugitive emissions data</td>
+<td class="gt_row gt_left" headers="Responsibilities">Provide data on energy production, consumption, and fugitive emissions</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Entity">Ministry of Agriculture</td>
+<td class="gt_row gt_left" headers="Role">Provision of agricultural data and soil/manure management information</td>
+<td class="gt_row gt_left" headers="Responsibilities">Provide data on crop production, livestock, and agricultural practices</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Entity">Ministry of Lands, Housing, and Human Settlements Development</td>
+<td class="gt_row gt_left" headers="Role">Provision of land-use data and remote sensing data</td>
+<td class="gt_row gt_left" headers="Responsibilities">Provide data on land-use changes, deforestation, and afforestation</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Entity">Local Government Authorities (LGAs)</td>
+<td class="gt_row gt_left" headers="Role">Provision of waste management data and implementation of mitigation measures</td>
+<td class="gt_row gt_left" headers="Responsibilities">Provide data on municipal solid waste; implement waste management practices</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Entity">Research Institutions and Academia</td>
+<td class="gt_row gt_left" headers="Role">Technical expertise, innovation, and methodological improvements</td>
+<td class="gt_row gt_left" headers="Responsibilities">Support data collection, emission estimation, and uncertainty analysis; develop country-specific emission factors</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Entity">GHG Coorindator (GHC)</td>
+<td class="gt_row gt_left" headers="Role">Coordination, oversight, sector coordination, and reporting</td>
+<td class="gt_row gt_left" headers="Responsibilities">Oversee inventory process; coordinate sector teams; compile and submit the final report</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
 </section>
-<section id="data-collection-processing-and-storage" class="level3" data-number="1.3.3">
-<h3 data-number="1.3.3" class="anchored" data-anchor-id="data-collection-processing-and-storage"><span class="header-section-number">1.3.3</span> Data collection, processing and storage</h3>
+<section id="data-collection-processing-and-storage" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="data-collection-processing-and-storage"><span class="header-section-number">2.3.3</span> Data collection, processing and storage</h3>
+<p>Data collection and management systems were established and maintained to ensure the accurate collection, storage, and analysis of data required for Greenhouse Gas (GHG) inventories and climate actions. The collection of high-quality data was a critical success factor in completing a robust and reliable GHG emissions inventory. However, the process of gathering data was challenging in Tanzania, given the limited availability of comprehensive and consistent data across sectors. Additionally, assessing the quality of the collected data posed significant challenges, requiring rigorous validation and verification processes.</p>
+<p>To address these challenges, the Vice President’s Office (VPO) and the National Carbon Monitoring Center (NCMC) led efforts to map out the flow of data within the Measurement, Reporting, and Verification (MRV) System. This exercise helped identify weaknesses in data collection and management, such as gaps in activity data, inconsistencies in reporting, and limited access to country-specific emission factors. Improvement activities were subsequently implemented, including capacity-building programs for Sector Working Groups, enhanced collaboration with the National Bureau of Statistics (NBS) for data validation, and the adoption of advanced methodologies for emission estimation. These measures strengthened the overall data infrastructure, ensuring that the GHG inventory process was both transparent and aligned with international standards.</p>
 </section>
-<section id="information-on-changes-to-the-national-institutional-arrangements" class="level3" data-number="1.3.4">
-<h3 data-number="1.3.4" class="anchored" data-anchor-id="information-on-changes-to-the-national-institutional-arrangements"><span class="header-section-number">1.3.4</span> Information on Changes to the National Institutional Arrangements</h3>
+<section id="information-on-changes-to-the-national-institutional-arrangements" class="level3" data-number="2.3.4">
+<h3 data-number="2.3.4" class="anchored" data-anchor-id="information-on-changes-to-the-national-institutional-arrangements"><span class="header-section-number">2.3.4</span> Information on Changes to the National Institutional Arrangements</h3>
+<p>Tanzania has undertaken significant steps to strengthen its national institutional arrangements for climate change management, particularly in the context of preparing and submitting Greenhouse Gas (GHG) Inventories and fulfilling its obligations under the United Nations Framework Convention on Climate Change (UNFCCC) shown in <a href="#fig-flowchart" class="quarto-xref">Figure&nbsp;<span>2.1</span></a>. A key development has been the establishment of the National Carbon Monitoring Center (NCMC) under the Vice President’s Office (VPO) – Division of Environment. The NCMC serves as the national focal point for climate change activities, coordinating the development, compilation, and submission of the GHG inventory, as well as overseeing the implementation of climate change policies and programs. This centralization of responsibilities has improved the efficiency and coherence of Tanzania’s climate change efforts.</p>
+<p>To enhance sector-specific data collection and emission estimation, Sector Working Groups were established under the Technical Working Group on Greenhouse Gas Inventory. These groups, covering Energy, Industrial Processes and Product Use (IPPU), Waste, Agriculture, and Forestry and Other Land Use (FOLU), bring together experts from relevant ministries, agencies, and research institutions (<a href="#tbl-roles" class="quarto-xref">Table&nbsp;<span>2.1</span></a>). This collaborative approach ensures accurate and comprehensive reporting while addressing sector-specific challenges. Additionally, the National Bureau of Statistics (NBS) has played a critical role in providing and validating essential data, such as population statistics, economic indicators, and sector-specific activity data, further enhancing the reliability of the GHG inventory.</p>
+<p>A National Carbon Monitoring Center (NCMC) oversee the GHG inventory process until a formal institutional framework is operationalized. The NCMC, led by the GHG Inventory Coordinator, works closely with Sector Coordinators to ensure the timely and accurate preparation of sector-specific emission estimates. Capacity-building programs have been implemented to enhance the skills of sector teams and stakeholders, focusing on data collection, emission estimation, and quality assurance/quality control (QA/QC) procedures. Furthermore, research institutions and universities have been increasingly integrated into the process, providing technical expertise, developing country-specific emission factors, and supporting methodological improvements. These efforts have enabled Tanzania to meet its international reporting obligations and contribute meaningfully to global climate action.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div id="fig-flowchart" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-flowchart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<pre class="mermaid mermaid-js" data-label="fig-flowchart">graph TB
+  %% Nodes with increased font size
+  VPO["Vice President’s Office (VPO)&lt;br&gt;Division of Environment"]
+  NCMC["National Carbon Monitoring Center"]
+  SectorGroups["Sector Groups&lt;br&gt;(Energy, IPPU, Waste, AFOLU)"]
+  NBS["National Bureau of Statistics (NBS)"]
+  Research["Research Institutions and Academia"]
+  GHC["GHG Coordinator (GHC)"]
+  Capacity["Capacity Building Programs"]
+  Legal["Legal and Policy Frameworks"]
+  Inventory["Improved GHG Inventory"]
+  Compliance["International Compliance"]
+
+  %% Apply larger font size to all nodes
+  style VPO fill:#lightblue,stroke:#333,font-size:28px
+  style NCMC fill:#lightgreen,stroke:#333,font-size:24px
+  style SectorGroups fill:#lightorange,stroke:#333,font-size:24px
+  style NBS fill:#lightpurple,stroke:#333,font-size:24px
+  style Research fill:#lightpink,stroke:#333,font-size:24px
+  style GHC fill:#lightteal,stroke:#333,font-size:24px
+  style Capacity fill:#lightcoral,stroke:#333,font-size:24px
+  style Legal fill:#lightgray,stroke:#333,font-size:24px
+  style Inventory fill:#lightgreen,stroke:#333,font-size:24px
+  style Compliance fill:#lightblue,stroke:#333,font-size:24px
+
+  %% Edges
+  VPO --&gt;|Establishes| NCMC
+  NCMC --&gt;|Coordinates| SectorGroups
+  SectorGroups --&gt;|Collaborates with| NBS
+  SectorGroups --&gt;|Collaborates with| Research
+%%   SectorGroups --&gt;|Collaborates with| Capacity
+%%   Research --&gt;|Collaborates with| Capacity
+  NCMC --&gt;|Oversees| GHC
+  GHC --&gt;|Implements| Capacity
+   GHC --&gt;|Implements| Capacity
+%%   GHC --&gt;|Implements| SectorGroups
+  Capacity --&gt;|Supports| Inventory
+  Legal --&gt;|Supports| Inventory
+  Inventory --&gt;|Enables| Compliance
+
+</pre>
+</div>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-flowchart-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: Changes to Tanzania’s National Institutional Arrangements for National Inventory Reporting of Greenhouse Gases emissions
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
 </section>
 </section>
-<section id="key-categories" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="key-categories"><span class="header-section-number">1.4</span> Key Categories</h2>
+<section id="key-categories" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="key-categories"><span class="header-section-number">2.4</span> Key Categories</h2>
 </section>
-<section id="quality-assurance-and-quality-control-qaqc" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="quality-assurance-and-quality-control-qaqc"><span class="header-section-number">1.5</span> Quality assurance and quality control (QA/QC)</h2>
+<section id="quality-assurance-and-quality-control-qaqc" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="quality-assurance-and-quality-control-qaqc"><span class="header-section-number">2.5</span> Quality assurance and quality control (QA/QC)</h2>
 </section>
-<section id="uncertainty-analysis" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="uncertainty-analysis"><span class="header-section-number">1.6</span> Uncertainty Analysis</h2>
+<section id="uncertainty-analysis" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="uncertainty-analysis"><span class="header-section-number">2.6</span> Uncertainty Analysis</h2>
 </section>
-<section id="overview-of-completeness-recalculations-and-improvements" class="level2" data-number="1.7">
-<h2 data-number="1.7" class="anchored" data-anchor-id="overview-of-completeness-recalculations-and-improvements"><span class="header-section-number">1.7</span> Overview of Completeness, Recalculations, and Improvements</h2>
-<section id="completeness" class="level3" data-number="1.7.1">
-<h3 data-number="1.7.1" class="anchored" data-anchor-id="completeness"><span class="header-section-number">1.7.1</span> Completeness</h3>
+<section id="overview-of-completeness-recalculations-and-improvements" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="overview-of-completeness-recalculations-and-improvements"><span class="header-section-number">2.7</span> Overview of Completeness, Recalculations, and Improvements</h2>
+<section id="completeness" class="level3" data-number="2.7.1">
+<h3 data-number="2.7.1" class="anchored" data-anchor-id="completeness"><span class="header-section-number">2.7.1</span> Completeness</h3>
 </section>
-<section id="recalculations" class="level3" data-number="1.7.2">
-<h3 data-number="1.7.2" class="anchored" data-anchor-id="recalculations"><span class="header-section-number">1.7.2</span> Recalculations</h3>
+<section id="recalculations" class="level3" data-number="2.7.2">
+<h3 data-number="2.7.2" class="anchored" data-anchor-id="recalculations"><span class="header-section-number">2.7.2</span> Recalculations</h3>
 </section>
-<section id="improvements" class="level3" data-number="1.7.3">
-<h3 data-number="1.7.3" class="anchored" data-anchor-id="improvements"><span class="header-section-number">1.7.3</span> Improvements</h3>
-</section>
-</section>
-<section id="background-information" class="level2" data-number="1.8">
-<h2 data-number="1.8" class="anchored" data-anchor-id="background-information"><span class="header-section-number">1.8</span> Background information</h2>
-<section id="climate-change" class="level3" data-number="1.8.1">
-<h3 data-number="1.8.1" class="anchored" data-anchor-id="climate-change"><span class="header-section-number">1.8.1</span> Climate Change</h3>
-</section>
-<section id="ghg-inventory" class="level3" data-number="1.8.2">
-<h3 data-number="1.8.2" class="anchored" data-anchor-id="ghg-inventory"><span class="header-section-number">1.8.2</span> GHG Inventory</h3>
+<section id="improvements" class="level3" data-number="2.7.3">
+<h3 data-number="2.7.3" class="anchored" data-anchor-id="improvements"><span class="header-section-number">2.7.3</span> Improvements</h3>
 </section>
 </section>
-<section id="overview-of-completeness" class="level2" data-number="1.9">
-<h2 data-number="1.9" class="anchored" data-anchor-id="overview-of-completeness"><span class="header-section-number">1.9</span> Overview of Completeness</h2>
+<section id="background-information" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="background-information"><span class="header-section-number">2.8</span> Background information</h2>
+<section id="climate-change" class="level3" data-number="2.8.1">
+<h3 data-number="2.8.1" class="anchored" data-anchor-id="climate-change"><span class="header-section-number">2.8.1</span> Climate Change</h3>
+</section>
+<section id="ghg-inventory" class="level3" data-number="2.8.2">
+<h3 data-number="2.8.2" class="anchored" data-anchor-id="ghg-inventory"><span class="header-section-number">2.8.2</span> GHG Inventory</h3>
+</section>
+</section>
+<section id="overview-of-completeness" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="overview-of-completeness"><span class="header-section-number">2.9</span> Overview of Completeness</h2>
 
 
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-IPCC2006vol4" class="csl-entry" role="listitem">
+Climate Change (IPCC), Intergovernmental Panel on. 2006. <em>2006 IPCC Guidelines for National Greenhouse Gas Inventories, Volume 4: Agriculture, Forestry, and Other Land Use</em>. Geneva, Switzerland: IPCC. <a href="https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol4.html">https://www.ipcc-nggip.iges.or.jp/public/2006gl/vol4.html</a>.
+</div>
+<div id="ref-ipcc2006" class="csl-entry" role="listitem">
+IPCC, INTERGOVERNMENTAL PANEL ON CLIMATE CHANGE. 2006. <span>“THE IPCC.”</span> <em>Guidelines for National Greenhouse Gas Inventories, Prepared by the National Green-House Gas Inventories Programme</em>. IGES Japan.
+</div>
+</div>
 </section>
 
 </main> <!-- /main -->
@@ -740,13 +1376,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="Executive Summary">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Executive Summary</span>
+      <a href="./index.html" class="pagination-link" aria-label="Executive Summary {.unnumbered}">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Executive Summary {.unnumbered}</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./02_trendRev2.html" class="pagination-link" aria-label="Trends in GHG emissions and removals">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Trends in GHG emissions and removals</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Trends in GHG emissions and removals</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

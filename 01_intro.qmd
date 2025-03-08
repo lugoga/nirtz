@@ -1,12 +1,171 @@
 # Introduction
 
+This is Tanzania’s National Inventory Report (NIR) covering the period from 1990 to 2021. The inventory accounts for greenhouse gas (GHG) emissions arising from anthropogenic activities, with a primary focus on direct GHGs, including carbon dioxide (CO~2~), methane (CH~4~), nitrous oxide (N~2`O), and perfluorocarbons (PFCs), as well as their removal by sinks. Emissions for each gas are quantified in terms of carbon dioxide equivalent (CO~2~e), using the 100-year global warming potentials (GWPs) as specified in the 1995 IPCC Second Assessment Report (@ipcc2006). 
+
+The base year for the analysis is set at 2000, providing a consistent reference point for tracking emissions trends over time. However, the emissions analysis places particular emphasis on changes observed between 2010 and 2021 to better reflect Tanzania’s current economic conditions and recent developments. This approach ensures that the inventory captures the most relevant and up-to-date trends, offering a more accurate representation of the country’s greenhouse gas emissions profile in the context of its evolving socio-economic landscape
+
+
+
+```{r}
+require(tidyverse)
+require(sf)
+require(patchwork)
+require(plotly)
+require(magrittr)
+require(gt)
+require(ggalluvial)
+```
+
+
 ##	Outline of the National Inventory Report
+
+The National Inventory Report (NIR) is organized into eight chapters to deliver a thorough and transparent overview of Tanzania’s greenhouse gas (GHG) emissions and removals. It opens with an **Executive Summary** that presents a high-level summary of key findings, such as total emissions, main sources, and trends spanning the reporting period (1990–2022). Following this is the **Introduction chapter**, which describes the purpose, scope, and institutional framework of the inventory, along with Tanzania’s obligations under international climate agreements. 
+
+The **Trends chapter** in GHG Emissions and Removals chapter provides an in-depth analysis of emission trends, detailing data by gas and sector, and elucidating the factors contributing to observed patterns. The main body of the report emphasizes sector-specific emissions, beginning with the **Energy sector chapter**, which includes emissions from fossil fuel combustion and fugitive sources. The **Industrial Processes and Product Use (IPPU) chapter** tackles emissions from cement manufacturing, chemical production, and the usage of solvents and refrigerants. The **Agriculture, Forestry, and Other Land Use (AFOLU) chapter** investigates emissions and removals resulting from agricultural practices, forestry, and changes in land use, while the **Waste chapter** focus on emissions linked to solid waste disposal, wastewater management, and incineration. 
+
+An **Others chapter** accounts for additional sources not addressed in the primary sectors, ensuring the inventory is complete. The report wraps up with the Recalculations chapter, detailing adjustments to previous estimates due to updated methodologies, data, or emission factors. It emphasizes the effects of these modifications on emission trends and sectoral contributions. The References section then enumerates all data sources, methodologies, and cited literature, promoting transparency and reproducibility. Collectively, these chapters furnish a comprehensive and detailed account of Tanzania’s GHG emissions, aiding informed decision-making and climate action.
+
 ##	Scope of the GHG Inventory
+
+The inventory presents a thorough evaluation of Tanzania's national emissions and removals, covering the entire territory of the United Republic of Tanzania, including both mainland Tanzania and Zanzibar. This inventory includes emissions from all major sectors -- Energy, Industrial Processes and Product Use (IPPU), Agriculture, Forestry, and Other Land Use (AFOLU), and Waste, ensuring a comprehensive assessment of human activities. It specifically targets direct GHGs like carbon dioxide (CO~2~), methane (CH~4~), nitrous oxide (N~2~O), and perfluorocarbons (PFCs), along with their absorption by sinks. 
+
+Emissions are expressed in terms of carbon dioxide equivalent (CO~2~e), based on the 100-year global warming potentials (GWPs) from the 1995 IPCC Second Assessment Report (@ipcc2006). The estimation of emissions employs a mix of Tier 1, Tier 2, and Tier 3 methodologies as specified in the 2006 IPCC Guidelines (@ipcc2006; @IPCC2006vol4). Where country-specific data is sparse, Tier 1 methods relying on default emission factors were employed, while Tier 2 and Tier 3 methods that incorporate more detailed activity data and country-specific emission factors were used when possible to improve precision. The inventory spans the years from 1990 to 2022, with 2000 as the reference year for trend and level analysis.
+
+
 ##	Institutional Arrangements
 ###	Institutional, Legal and Procedural Arrangements for compiling the inventory
+
+The **Environmental Management Act** (Cap. 191) and related climate change policies provide the legal framework for Tanzania to meet its international obligations under the United Nations Framework Convention on Climate Change (UNFCCC). These regulations require government departments and public entities to report on greenhouse gas (GHG) emissions for the national inventory. The **Vice President’s Office (VPO)**, through its **Division of Environment**, is the designated national entity responsible for the overall development, compilation, and submission of the GHG inventory to the UNFCCC. Specifically, the Climate Change Directorate (NCMC) under the VPO coordinates the implementation of climate change activities in Tanzania, including the preparation of GHG inventories.
+
+The National Inventory Report (NIR) for Tanzania’s Third National Communication (TNC) and Biennial Update Reports (BURs) has been developed through collaboration among inter-ministerial and inter-institutional sector teams. The Project Manager, who also serves as the GHG Inventory Coordinator, worked closely with Sector Coordinators and sector teams to collect data, estimate emissions, and draft the inventory report. To support the preparation of the GHG inventory, five Sector Working Groups were established under the Technical Working Group on Greenhouse Gas Inventory. These groups include:
+
+1. Energy (including Transport) Sector Working Group
+1. Industrial Processes and Product Use (IPPU) Sector Working Group
+1. Waste Sector Working Group
+1. Agriculture (Crop and Livestock) Sector Working Group
+1. Forestry and Other Land Use (FOLU) Sector Working Group
+
+The GHG coordinator (GHC) engaged technical experts and institutions to provide guidance and worked closely with sector teams to develop systems and procedures for efficient GHG inventory preparation. While Tanzania has envisioned a formal GHG Inventory Institutional Framework, it is yet to be fully operationalized. Until then, the GHC serves as the National GHG Inventory Coordination Unit, with the Project Manager acting as the GHG Inventory Coordinator. Each Sector Working Group is led by a Sector Coordinator, appointed by the Project Manager in consultation with the respective sector teams.
+
+
 ###	Roles and Responsibilities of Government bodies and organisations
+
+The preparation of Tanzania’s Greenhouse Gas (GHG) Inventory involves a coordinated effort among various government bodies and organizations, each with specific roles and responsibilities to ensure the accuracy, completeness, and transparency of the inventory. The key entities and their responsibilities are outlined in @tbl-roles.
+
+```{r}
+#| label: tbl-roles
+#| tbl-cap:  Government bodies and organizations with specific roles for prepration of the national inventory report
+
+roles_responsibilities <- data.frame(
+  Entity = c(
+    "Vice President’s Office (VPO) – Division of Environment",
+    "National Carbon Monitoring Center (NCMC)",
+    "Sector Working Groups",
+    "National Bureau of Statistics (NBS)",
+    "Ministry of Energy",
+    "Ministry of Agriculture",
+    "Ministry of Lands, Housing, and Human Settlements Development",
+    "Local Government Authorities (LGAs)",
+    "Research Institutions and Academia",
+    "GHG Coorindator (GHC)"
+  ),
+  Role = c(
+    "Overall coordination, policy oversight, and resource mobilization",
+    "Technical coordination, capacity building, and stakeholder engagement",
+    "Data collection, emission estimation, and quality assurance/quality control (QA/QC)",
+    "Provision and validation of statistical data",
+    "Provision of energy sector data and fugitive emissions data",
+    "Provision of agricultural data and soil/manure management information",
+    "Provision of land-use data and remote sensing data",
+    "Provision of waste management data and implementation of mitigation measures",
+    "Technical expertise, innovation, and methodological improvements",
+    "Coordination, oversight, sector coordination, and reporting"
+  ),
+  Responsibilities = c(
+    "Develop, compile, and submit the GHG inventory; ensure alignment with policies and international requirements",
+    "Coordinate climate change activities; provide technical oversight and training",
+    "Collect and analyze sector-specific data; estimate emissions; implement QA/QC procedures",
+    "Provide population, economic, and sector-specific data; validate data accuracy",
+    "Provide data on energy production, consumption, and fugitive emissions",
+    "Provide data on crop production, livestock, and agricultural practices",
+    "Provide data on land-use changes, deforestation, and afforestation",
+    "Provide data on municipal solid waste; implement waste management practices",
+    "Support data collection, emission estimation, and uncertainty analysis; develop country-specific emission factors",
+    "Oversee inventory process; coordinate sector teams; compile and submit the final report"
+  )
+)
+
+roles_responsibilities |> 
+    gt() |> 
+    cols_width(
+        Entity ~ px(150),
+        Role ~ px(250),
+        Responsibilities ~ px(250)
+    )
+```
+
 ###	Data collection, processing and storage
+
+Data collection and management systems were established and maintained to ensure the accurate collection, storage, and analysis of data required for Greenhouse Gas (GHG) inventories and climate actions. The collection of high-quality data was a critical success factor in completing a robust and reliable GHG emissions inventory. However, the process of gathering data was challenging in Tanzania, given the limited availability of comprehensive and consistent data across sectors. Additionally, assessing the quality of the collected data posed significant challenges, requiring rigorous validation and verification processes.
+
+To address these challenges, the Vice President’s Office (VPO) and the National Carbon Monitoring Center (NCMC) led efforts to map out the flow of data within the Measurement, Reporting, and Verification (MRV) System. This exercise helped identify weaknesses in data collection and management, such as gaps in activity data, inconsistencies in reporting, and limited access to country-specific emission factors. Improvement activities were subsequently implemented, including capacity-building programs for Sector Working Groups, enhanced collaboration with the National Bureau of Statistics (NBS) for data validation, and the adoption of advanced methodologies for emission estimation. These measures strengthened the overall data infrastructure, ensuring that the GHG inventory process was both transparent and aligned with international standards.
+
+
 ###	Information on Changes to the National Institutional Arrangements
+
+Tanzania has undertaken significant steps to strengthen its national institutional arrangements for climate change management, particularly in the context of preparing and submitting Greenhouse Gas (GHG) Inventories and fulfilling its obligations under the United Nations Framework Convention on Climate Change (UNFCCC) shown in @fig-flowchart. A key development has been the establishment of the National Carbon Monitoring Center (NCMC) under the Vice President’s Office (VPO) – Division of Environment. The NCMC serves as the national focal point for climate change activities, coordinating the development, compilation, and submission of the GHG inventory, as well as overseeing the implementation of climate change policies and programs. This centralization of responsibilities has improved the efficiency and coherence of Tanzania’s climate change efforts.
+
+To enhance sector-specific data collection and emission estimation, Sector Working Groups were established under the Technical Working Group on Greenhouse Gas Inventory. These groups, covering Energy, Industrial Processes and Product Use (IPPU), Waste, Agriculture, and Forestry and Other Land Use (FOLU), bring together experts from relevant ministries, agencies, and research institutions (@tbl-roles). This collaborative approach ensures accurate and comprehensive reporting while addressing sector-specific challenges. Additionally, the National Bureau of Statistics (NBS) has played a critical role in providing and validating essential data, such as population statistics, economic indicators, and sector-specific activity data, further enhancing the reliability of the GHG inventory.
+
+A National Carbon Monitoring Center (NCMC) oversee the GHG inventory process until a formal institutional framework is operationalized. The NCMC, led by the GHG Inventory Coordinator, works closely with Sector Coordinators to ensure the timely and accurate preparation of sector-specific emission estimates. Capacity-building programs have been implemented to enhance the skills of sector teams and stakeholders, focusing on data collection, emission estimation, and quality assurance/quality control (QA/QC) procedures. Furthermore, research institutions and universities have been increasingly integrated into the process, providing technical expertise, developing country-specific emission factors, and supporting methodological improvements. These efforts have enabled Tanzania to meet its international reporting obligations and contribute meaningfully to global climate action.
+
+
+```{mermaid}
+%%| label: fig-flowchart
+%%| fig-cap: Changes to Tanzania’s National Institutional Arrangements for National Inventory Reporting of Greenhouse Gases emissions
+
+graph TB
+  %% Nodes with increased font size
+  VPO["Vice President’s Office (VPO)<br>Division of Environment"]
+  NCMC["National Carbon Monitoring Center"]
+  SectorGroups["Sector Groups<br>(Energy, IPPU, Waste, AFOLU)"]
+  NBS["National Bureau of Statistics (NBS)"]
+  Research["Research Institutions and Academia"]
+  GHC["GHG Coordinator (GHC)"]
+  Capacity["Capacity Building Programs"]
+  Legal["Legal and Policy Frameworks"]
+  Inventory["Improved GHG Inventory"]
+  Compliance["International Compliance"]
+
+  %% Apply larger font size to all nodes
+  style VPO fill:#lightblue,stroke:#333,font-size:28px
+  style NCMC fill:#lightgreen,stroke:#333,font-size:24px
+  style SectorGroups fill:#lightorange,stroke:#333,font-size:24px
+  style NBS fill:#lightpurple,stroke:#333,font-size:24px
+  style Research fill:#lightpink,stroke:#333,font-size:24px
+  style GHC fill:#lightteal,stroke:#333,font-size:24px
+  style Capacity fill:#lightcoral,stroke:#333,font-size:24px
+  style Legal fill:#lightgray,stroke:#333,font-size:24px
+  style Inventory fill:#lightgreen,stroke:#333,font-size:24px
+  style Compliance fill:#lightblue,stroke:#333,font-size:24px
+
+  %% Edges
+  VPO -->|Establishes| NCMC
+  NCMC -->|Coordinates| SectorGroups
+  SectorGroups -->|Collaborates with| NBS
+  SectorGroups -->|Collaborates with| Research
+%%   SectorGroups -->|Collaborates with| Capacity
+%%   Research -->|Collaborates with| Capacity
+  NCMC -->|Oversees| GHC
+  GHC -->|Implements| Capacity
+   GHC -->|Implements| Capacity
+%%   GHC -->|Implements| SectorGroups
+  Capacity -->|Supports| Inventory
+  Legal -->|Supports| Inventory
+  Inventory -->|Enables| Compliance
+
+```
+
 ##	Key Categories
 ##	Quality assurance and quality control (QA/QC)
 ##	Uncertainty Analysis
